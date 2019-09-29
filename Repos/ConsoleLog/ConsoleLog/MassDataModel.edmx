@@ -1,0 +1,387 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="MASSDATA_DEV.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="ConsoleLogs">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Title" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="ReportDate" Type="datetime2" Precision="7" Nullable="false" />
+          <Property Name="GMTDay" Type="nvarchar" MaxLength="50" />
+          <Property Name="GMTHours" Type="nvarchar" MaxLength="50" />
+          <Property Name="Increment" Type="nvarchar" MaxLength="50" />
+          <Property Name="PreparedByESL" Type="nvarchar" MaxLength="50" />
+          <Property Name="ShiftDescription" Type="nvarchar(max)" />
+          <Property Name="OEC_OECLead" Type="nvarchar" MaxLength="50" />
+          <Property Name="OEC_ESL" Type="nvarchar" MaxLength="50" />
+          <Property Name="OEC_ESC" Type="nvarchar" MaxLength="50" />
+          <Property Name="OEC_FPL" Type="nvarchar" MaxLength="50" />
+          <Property Name="OEC_OPR" Type="nvarchar" MaxLength="50" />
+          <Property Name="ROBO_Lead" Type="nvarchar" MaxLength="50" />
+          <Property Name="ROBO_Systems" Type="nvarchar" MaxLength="50" />
+          <Property Name="ROBO_Task" Type="nvarchar" MaxLength="50" />
+          <Property Name="EVR" Type="nvarchar" MaxLength="50" />
+          <Property Name="IPCanada" Type="nvarchar" MaxLength="50" />
+          <Property Name="ShiftSummary" Type="nvarchar(max)" />
+          <Property Name="ForwardOrOpenWork" Type="nvarchar(max)" />
+          <Property Name="MSSStart_RWS_Lab" Type="nvarchar" MaxLength="50" />
+          <Property Name="MSSStart_RWS_Cup" Type="nvarchar" MaxLength="50" />
+          <Property Name="MSSStart_MT_WS" Type="int" />
+          <Property Name="MSSStart_SSRMS_BasedOn_LEE" Type="nvarchar" MaxLength="50" />
+          <Property Name="MSSStart_SPDM_BasedOn" Type="nvarchar" MaxLength="50" />
+          <Property Name="MSSStart_FSTStates_MBS" Type="nvarchar" MaxLength="50" />
+          <Property Name="MSSStart_FSTStates_POA" Type="nvarchar" MaxLength="50" />
+          <Property Name="MSSStart_FSTStates_SSRMS" Type="nvarchar" MaxLength="50" />
+          <Property Name="MSSStart_FSTStates_SPDMPSU" Type="nvarchar" MaxLength="50" />
+          <Property Name="MSSStart_FSTStates_SPDMBody" Type="nvarchar" MaxLength="50" />
+          <Property Name="MSSStart_FSTStates_SPDMSACU" Type="nvarchar" MaxLength="50" />
+          <Property Name="MSSStart_FSTStates_SPDMArms" Type="nvarchar" MaxLength="50" />
+          <Property Name="MSSStart_Payloads_SSRMSTipLee" Type="nvarchar" MaxLength="50" />
+          <Property Name="MSSStart_Payloads_SPDMLee" Type="nvarchar" MaxLength="50" />
+          <Property Name="MSSStart_Payloads_OTCM1" Type="nvarchar" MaxLength="50" />
+          <Property Name="MSSStart_Payloads_OTCM2" Type="nvarchar" MaxLength="50" />
+          <Property Name="MSSStart_Payloads_MCAS" Type="nvarchar" MaxLength="50" />
+          <Property Name="MSSStart_Payloads_EOTP" Type="nvarchar" MaxLength="50" />
+          <Property Name="MSSStart_Payloads_POA" Type="nvarchar" MaxLength="50" />
+          <Property Name="MSSStart_SSRMSConfiguration" Type="nvarchar(max)" />
+          <Property Name="MSSStart_SPDMConfiguration" Type="nvarchar(max)" />
+          <Property Name="MSSStart_Joints_SSRMS_SR" Type="numeric" Precision="13" Scale="5" />
+          <Property Name="MSSStart_Joints_SSRMS_SY" Type="numeric" Precision="13" Scale="5" />
+          <Property Name="MSSStart_Joints_SSRMS_SP" Type="numeric" Precision="13" Scale="5" />
+          <Property Name="MSSStart_Joints_SSRMS_EP" Type="numeric" Precision="13" Scale="5" />
+          <Property Name="MSSStart_Joints_SSRMS_WP" Type="numeric" Precision="13" Scale="5" />
+          <Property Name="MSSStart_Joints_SSRMS_WY" Type="numeric" Precision="13" Scale="5" />
+          <Property Name="MSSStart_Joints_SSRMS_WR" Type="numeric" Precision="13" Scale="5" />
+          <Property Name="MSSStart_Joints_SSRMS_SPDMBR" Type="numeric" Precision="13" Scale="5" />
+          <Property Name="MSSStart_Joints_ARM1_SR" Type="numeric" Precision="13" Scale="5" />
+          <Property Name="MSSStart_Joints_ARM1_SY" Type="numeric" Precision="13" Scale="5" />
+          <Property Name="MSSStart_Joints_ARM1_SP" Type="numeric" Precision="13" Scale="5" />
+          <Property Name="MSSStart_Joints_ARM1_EP" Type="numeric" Precision="13" Scale="5" />
+          <Property Name="MSSStart_Joints_ARM1_WP" Type="numeric" Precision="13" Scale="5" />
+          <Property Name="MSSStart_Joints_ARM1_WY" Type="numeric" Precision="13" Scale="5" />
+          <Property Name="MSSStart_Joints_ARM1_WR" Type="numeric" Precision="13" Scale="5" />
+          <Property Name="MSSStart_Joints_ARM2_SR" Type="numeric" Precision="13" Scale="5" />
+          <Property Name="MSSStart_Joints_ARM2_SY" Type="numeric" Precision="13" Scale="5" />
+          <Property Name="MSSStart_Joints_ARM2_SP" Type="numeric" Precision="13" Scale="5" />
+          <Property Name="MSSStart_Joints_ARM2_EP" Type="numeric" Precision="13" Scale="5" />
+          <Property Name="MSSStart_Joints_ARM2_WP" Type="numeric" Precision="13" Scale="5" />
+          <Property Name="MSSStart_Joints_ARM2_WY" Type="numeric" Precision="13" Scale="5" />
+          <Property Name="MSSStart_Joints_ARM2_WR" Type="numeric" Precision="13" Scale="5" />
+          <Property Name="MSSStart_Joints_EOTP" Type="numeric" Precision="13" Scale="5" />
+          <Property Name="MSSEnd_RWS_Lab" Type="nvarchar" MaxLength="50" />
+          <Property Name="MSSEnd_RWS_Cup" Type="nvarchar" MaxLength="50" />
+          <Property Name="MSSEnd_MT_WS" Type="int" />
+          <Property Name="MSSEnd_SSRMS_BasedOn_LEE" Type="nvarchar" MaxLength="50" />
+          <Property Name="MSSEnd_SPDM_BasedOn" Type="nvarchar" MaxLength="50" />
+          <Property Name="MSSEnd_FSTStates_MBS" Type="nvarchar" MaxLength="50" />
+          <Property Name="MSSEnd_FSTStates_POA" Type="nvarchar" MaxLength="50" />
+          <Property Name="MSSEnd_FSTStates_SSRMS" Type="nvarchar" MaxLength="50" />
+          <Property Name="MSSEnd_FSTStates_SPDMPSU" Type="nvarchar" MaxLength="50" />
+          <Property Name="MSSEnd_FSTStates_SPDMBody" Type="nvarchar" MaxLength="50" />
+          <Property Name="MSSEnd_FSTStates_SPDMSACU" Type="nvarchar" MaxLength="50" />
+          <Property Name="MSSEnd_FSTStates_SPDMArms" Type="nvarchar" MaxLength="50" />
+          <Property Name="MSSEnd_Payloads_SSRMSTipLee" Type="nvarchar" MaxLength="50" />
+          <Property Name="MSSEnd_Payloads_SPDMLee" Type="nvarchar" MaxLength="50" />
+          <Property Name="MSSEnd_Payloads_OTCM1" Type="nvarchar" MaxLength="50" />
+          <Property Name="MSSEnd_Payloads_OTCM2" Type="nvarchar" MaxLength="50" />
+          <Property Name="MSSEnd_Payloads_MCAS" Type="nvarchar" MaxLength="50" />
+          <Property Name="MSSEnd_Payloads_EOTP" Type="nvarchar" MaxLength="50" />
+          <Property Name="MSSEnd_Payloads_POA" Type="nvarchar" MaxLength="50" />
+          <Property Name="MSSEnd_SSRMSConfiguration" Type="nvarchar(max)" />
+          <Property Name="MSSEnd_SPDMConfiguration" Type="nvarchar(max)" />
+          <Property Name="MSSEnd_Joints_SSRMS_SR" Type="numeric" Precision="13" Scale="5" />
+          <Property Name="MSSEnd_Joints_SSRMS_SY" Type="numeric" Precision="13" Scale="5" />
+          <Property Name="MSSEnd_Joints_SSRMS_SP" Type="numeric" Precision="13" Scale="5" />
+          <Property Name="MSSEnd_Joints_SSRMS_EP" Type="numeric" Precision="13" Scale="5" />
+          <Property Name="MSSEnd_Joints_SSRMS_WP" Type="numeric" Precision="13" Scale="5" />
+          <Property Name="MSSEnd_Joints_SSRMS_WY" Type="numeric" Precision="13" Scale="5" />
+          <Property Name="MSSEnd_Joints_SSRMS_WR" Type="numeric" Precision="13" Scale="5" />
+          <Property Name="MSSEnd_Joints_SSRMS_SPDMBR" Type="numeric" Precision="13" Scale="5" />
+          <Property Name="MSSEnd_Joints_ARM1_SR" Type="numeric" Precision="13" Scale="5" />
+          <Property Name="MSSEnd_Joints_ARM1_SY" Type="numeric" Precision="13" Scale="5" />
+          <Property Name="MSSEnd_Joints_ARM1_SP" Type="numeric" Precision="13" Scale="5" />
+          <Property Name="MSSEnd_Joints_ARM1_EP" Type="numeric" Precision="13" Scale="5" />
+          <Property Name="MSSEnd_Joints_ARM1_WP" Type="numeric" Precision="13" Scale="5" />
+          <Property Name="MSSEnd_Joints_ARM1_WY" Type="numeric" Precision="13" Scale="5" />
+          <Property Name="MSSEnd_Joints_ARM1_WR" Type="numeric" Precision="13" Scale="5" />
+          <Property Name="MSSEnd_Joints_ARM2_SR" Type="numeric" Precision="13" Scale="5" />
+          <Property Name="MSSEnd_Joints_ARM2_SY" Type="numeric" Precision="13" Scale="5" />
+          <Property Name="MSSEnd_Joints_ARM2_SP" Type="numeric" Precision="13" Scale="5" />
+          <Property Name="MSSEnd_Joints_ARM2_EP" Type="numeric" Precision="13" Scale="5" />
+          <Property Name="MSSEnd_Joints_ARM2_WP" Type="numeric" Precision="13" Scale="5" />
+          <Property Name="MSSEnd_Joints_ARM2_WY" Type="numeric" Precision="13" Scale="5" />
+          <Property Name="MSSEnd_Joints_ARM2_WR" Type="numeric" Precision="13" Scale="5" />
+          <Property Name="MSSEnd_Joints_EOTP" Type="numeric" Precision="13" Scale="5" />
+        </EntityType>
+        <EntityContainer Name="MASSDATA_DEVStoreContainer">
+          <EntitySet Name="ConsoleLogs" EntityType="Self.ConsoleLogs" Schema="dbo" store:Type="Tables" />
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="MASSDATA_DEV" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="MassDataContext" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="ConsoleLogs" EntityType="MASSDATA_DEV.ConsoleLog" />
+        </EntityContainer>
+        <EntityType Name="ConsoleLog">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Title" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ReportDate" Type="DateTime" Nullable="false" Precision="7" />
+          <Property Name="GMTDay" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="GMTHours" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Increment" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="PreparedByESL" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ShiftDescription" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="OEC_OECLead" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="OEC_ESL" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="OEC_ESC" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="OEC_FPL" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="OEC_OPR" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ROBO_Lead" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ROBO_Systems" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ROBO_Task" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="EVR" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="IPCanada" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ShiftSummary" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ForwardOrOpenWork" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="MSSStart_RWS_Lab" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="MSSStart_RWS_Cup" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="MSSStart_MT_WS" Type="Int32" />
+          <Property Name="MSSStart_SSRMS_BasedOn_LEE" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="MSSStart_SPDM_BasedOn" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="MSSStart_FSTStates_MBS" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="MSSStart_FSTStates_POA" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="MSSStart_FSTStates_SSRMS" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="MSSStart_FSTStates_SPDMPSU" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="MSSStart_FSTStates_SPDMBody" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="MSSStart_FSTStates_SPDMSACU" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="MSSStart_FSTStates_SPDMArms" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="MSSStart_Payloads_SSRMSTipLee" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="MSSStart_Payloads_SPDMLee" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="MSSStart_Payloads_OTCM1" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="MSSStart_Payloads_OTCM2" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="MSSStart_Payloads_MCAS" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="MSSStart_Payloads_EOTP" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="MSSStart_Payloads_POA" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="MSSStart_SSRMSConfiguration" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="MSSStart_SPDMConfiguration" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="MSSStart_Joints_SSRMS_SR" Type="Decimal" Precision="13" Scale="5" />
+          <Property Name="MSSStart_Joints_SSRMS_SY" Type="Decimal" Precision="13" Scale="5" />
+          <Property Name="MSSStart_Joints_SSRMS_SP" Type="Decimal" Precision="13" Scale="5" />
+          <Property Name="MSSStart_Joints_SSRMS_EP" Type="Decimal" Precision="13" Scale="5" />
+          <Property Name="MSSStart_Joints_SSRMS_WP" Type="Decimal" Precision="13" Scale="5" />
+          <Property Name="MSSStart_Joints_SSRMS_WY" Type="Decimal" Precision="13" Scale="5" />
+          <Property Name="MSSStart_Joints_SSRMS_WR" Type="Decimal" Precision="13" Scale="5" />
+          <Property Name="MSSStart_Joints_SSRMS_SPDMBR" Type="Decimal" Precision="13" Scale="5" />
+          <Property Name="MSSStart_Joints_ARM1_SR" Type="Decimal" Precision="13" Scale="5" />
+          <Property Name="MSSStart_Joints_ARM1_SY" Type="Decimal" Precision="13" Scale="5" />
+          <Property Name="MSSStart_Joints_ARM1_SP" Type="Decimal" Precision="13" Scale="5" />
+          <Property Name="MSSStart_Joints_ARM1_EP" Type="Decimal" Precision="13" Scale="5" />
+          <Property Name="MSSStart_Joints_ARM1_WP" Type="Decimal" Precision="13" Scale="5" />
+          <Property Name="MSSStart_Joints_ARM1_WY" Type="Decimal" Precision="13" Scale="5" />
+          <Property Name="MSSStart_Joints_ARM1_WR" Type="Decimal" Precision="13" Scale="5" />
+          <Property Name="MSSStart_Joints_ARM2_SR" Type="Decimal" Precision="13" Scale="5" />
+          <Property Name="MSSStart_Joints_ARM2_SY" Type="Decimal" Precision="13" Scale="5" />
+          <Property Name="MSSStart_Joints_ARM2_SP" Type="Decimal" Precision="13" Scale="5" />
+          <Property Name="MSSStart_Joints_ARM2_EP" Type="Decimal" Precision="13" Scale="5" />
+          <Property Name="MSSStart_Joints_ARM2_WP" Type="Decimal" Precision="13" Scale="5" />
+          <Property Name="MSSStart_Joints_ARM2_WY" Type="Decimal" Precision="13" Scale="5" />
+          <Property Name="MSSStart_Joints_ARM2_WR" Type="Decimal" Precision="13" Scale="5" />
+          <Property Name="MSSStart_Joints_EOTP" Type="Decimal" Precision="13" Scale="5" />
+          <Property Name="MSSEnd_RWS_Lab" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="MSSEnd_RWS_Cup" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="MSSEnd_MT_WS" Type="Int32" />
+          <Property Name="MSSEnd_SSRMS_BasedOn_LEE" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="MSSEnd_SPDM_BasedOn" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="MSSEnd_FSTStates_MBS" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="MSSEnd_FSTStates_POA" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="MSSEnd_FSTStates_SSRMS" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="MSSEnd_FSTStates_SPDMPSU" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="MSSEnd_FSTStates_SPDMBody" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="MSSEnd_FSTStates_SPDMSACU" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="MSSEnd_FSTStates_SPDMArms" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="MSSEnd_Payloads_SSRMSTipLee" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="MSSEnd_Payloads_SPDMLee" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="MSSEnd_Payloads_OTCM1" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="MSSEnd_Payloads_OTCM2" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="MSSEnd_Payloads_MCAS" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="MSSEnd_Payloads_EOTP" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="MSSEnd_Payloads_POA" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="MSSEnd_SSRMSConfiguration" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="MSSEnd_SPDMConfiguration" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="MSSEnd_Joints_SSRMS_SR" Type="Decimal" Precision="13" Scale="5" />
+          <Property Name="MSSEnd_Joints_SSRMS_SY" Type="Decimal" Precision="13" Scale="5" />
+          <Property Name="MSSEnd_Joints_SSRMS_SP" Type="Decimal" Precision="13" Scale="5" />
+          <Property Name="MSSEnd_Joints_SSRMS_EP" Type="Decimal" Precision="13" Scale="5" />
+          <Property Name="MSSEnd_Joints_SSRMS_WP" Type="Decimal" Precision="13" Scale="5" />
+          <Property Name="MSSEnd_Joints_SSRMS_WY" Type="Decimal" Precision="13" Scale="5" />
+          <Property Name="MSSEnd_Joints_SSRMS_WR" Type="Decimal" Precision="13" Scale="5" />
+          <Property Name="MSSEnd_Joints_SSRMS_SPDMBR" Type="Decimal" Precision="13" Scale="5" />
+          <Property Name="MSSEnd_Joints_ARM1_SR" Type="Decimal" Precision="13" Scale="5" />
+          <Property Name="MSSEnd_Joints_ARM1_SY" Type="Decimal" Precision="13" Scale="5" />
+          <Property Name="MSSEnd_Joints_ARM1_SP" Type="Decimal" Precision="13" Scale="5" />
+          <Property Name="MSSEnd_Joints_ARM1_EP" Type="Decimal" Precision="13" Scale="5" />
+          <Property Name="MSSEnd_Joints_ARM1_WP" Type="Decimal" Precision="13" Scale="5" />
+          <Property Name="MSSEnd_Joints_ARM1_WY" Type="Decimal" Precision="13" Scale="5" />
+          <Property Name="MSSEnd_Joints_ARM1_WR" Type="Decimal" Precision="13" Scale="5" />
+          <Property Name="MSSEnd_Joints_ARM2_SR" Type="Decimal" Precision="13" Scale="5" />
+          <Property Name="MSSEnd_Joints_ARM2_SY" Type="Decimal" Precision="13" Scale="5" />
+          <Property Name="MSSEnd_Joints_ARM2_SP" Type="Decimal" Precision="13" Scale="5" />
+          <Property Name="MSSEnd_Joints_ARM2_EP" Type="Decimal" Precision="13" Scale="5" />
+          <Property Name="MSSEnd_Joints_ARM2_WP" Type="Decimal" Precision="13" Scale="5" />
+          <Property Name="MSSEnd_Joints_ARM2_WY" Type="Decimal" Precision="13" Scale="5" />
+          <Property Name="MSSEnd_Joints_ARM2_WR" Type="Decimal" Precision="13" Scale="5" />
+          <Property Name="MSSEnd_Joints_EOTP" Type="Decimal" Precision="13" Scale="5" />
+        </EntityType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="MASSDATA_DEVStoreContainer" CdmEntityContainer="MassDataContext">
+          <EntitySetMapping Name="ConsoleLogs">
+            <EntityTypeMapping TypeName="MASSDATA_DEV.ConsoleLog">
+              <MappingFragment StoreEntitySet="ConsoleLogs">
+                <ScalarProperty Name="MSSEnd_Joints_EOTP" ColumnName="MSSEnd_Joints_EOTP" />
+                <ScalarProperty Name="MSSEnd_Joints_ARM2_WR" ColumnName="MSSEnd_Joints_ARM2_WR" />
+                <ScalarProperty Name="MSSEnd_Joints_ARM2_WY" ColumnName="MSSEnd_Joints_ARM2_WY" />
+                <ScalarProperty Name="MSSEnd_Joints_ARM2_WP" ColumnName="MSSEnd_Joints_ARM2_WP" />
+                <ScalarProperty Name="MSSEnd_Joints_ARM2_EP" ColumnName="MSSEnd_Joints_ARM2_EP" />
+                <ScalarProperty Name="MSSEnd_Joints_ARM2_SP" ColumnName="MSSEnd_Joints_ARM2_SP" />
+                <ScalarProperty Name="MSSEnd_Joints_ARM2_SY" ColumnName="MSSEnd_Joints_ARM2_SY" />
+                <ScalarProperty Name="MSSEnd_Joints_ARM2_SR" ColumnName="MSSEnd_Joints_ARM2_SR" />
+                <ScalarProperty Name="MSSEnd_Joints_ARM1_WR" ColumnName="MSSEnd_Joints_ARM1_WR" />
+                <ScalarProperty Name="MSSEnd_Joints_ARM1_WY" ColumnName="MSSEnd_Joints_ARM1_WY" />
+                <ScalarProperty Name="MSSEnd_Joints_ARM1_WP" ColumnName="MSSEnd_Joints_ARM1_WP" />
+                <ScalarProperty Name="MSSEnd_Joints_ARM1_EP" ColumnName="MSSEnd_Joints_ARM1_EP" />
+                <ScalarProperty Name="MSSEnd_Joints_ARM1_SP" ColumnName="MSSEnd_Joints_ARM1_SP" />
+                <ScalarProperty Name="MSSEnd_Joints_ARM1_SY" ColumnName="MSSEnd_Joints_ARM1_SY" />
+                <ScalarProperty Name="MSSEnd_Joints_ARM1_SR" ColumnName="MSSEnd_Joints_ARM1_SR" />
+                <ScalarProperty Name="MSSEnd_Joints_SSRMS_SPDMBR" ColumnName="MSSEnd_Joints_SSRMS_SPDMBR" />
+                <ScalarProperty Name="MSSEnd_Joints_SSRMS_WR" ColumnName="MSSEnd_Joints_SSRMS_WR" />
+                <ScalarProperty Name="MSSEnd_Joints_SSRMS_WY" ColumnName="MSSEnd_Joints_SSRMS_WY" />
+                <ScalarProperty Name="MSSEnd_Joints_SSRMS_WP" ColumnName="MSSEnd_Joints_SSRMS_WP" />
+                <ScalarProperty Name="MSSEnd_Joints_SSRMS_EP" ColumnName="MSSEnd_Joints_SSRMS_EP" />
+                <ScalarProperty Name="MSSEnd_Joints_SSRMS_SP" ColumnName="MSSEnd_Joints_SSRMS_SP" />
+                <ScalarProperty Name="MSSEnd_Joints_SSRMS_SY" ColumnName="MSSEnd_Joints_SSRMS_SY" />
+                <ScalarProperty Name="MSSEnd_Joints_SSRMS_SR" ColumnName="MSSEnd_Joints_SSRMS_SR" />
+                <ScalarProperty Name="MSSEnd_SPDMConfiguration" ColumnName="MSSEnd_SPDMConfiguration" />
+                <ScalarProperty Name="MSSEnd_SSRMSConfiguration" ColumnName="MSSEnd_SSRMSConfiguration" />
+                <ScalarProperty Name="MSSEnd_Payloads_POA" ColumnName="MSSEnd_Payloads_POA" />
+                <ScalarProperty Name="MSSEnd_Payloads_EOTP" ColumnName="MSSEnd_Payloads_EOTP" />
+                <ScalarProperty Name="MSSEnd_Payloads_MCAS" ColumnName="MSSEnd_Payloads_MCAS" />
+                <ScalarProperty Name="MSSEnd_Payloads_OTCM2" ColumnName="MSSEnd_Payloads_OTCM2" />
+                <ScalarProperty Name="MSSEnd_Payloads_OTCM1" ColumnName="MSSEnd_Payloads_OTCM1" />
+                <ScalarProperty Name="MSSEnd_Payloads_SPDMLee" ColumnName="MSSEnd_Payloads_SPDMLee" />
+                <ScalarProperty Name="MSSEnd_Payloads_SSRMSTipLee" ColumnName="MSSEnd_Payloads_SSRMSTipLee" />
+                <ScalarProperty Name="MSSEnd_FSTStates_SPDMArms" ColumnName="MSSEnd_FSTStates_SPDMArms" />
+                <ScalarProperty Name="MSSEnd_FSTStates_SPDMSACU" ColumnName="MSSEnd_FSTStates_SPDMSACU" />
+                <ScalarProperty Name="MSSEnd_FSTStates_SPDMBody" ColumnName="MSSEnd_FSTStates_SPDMBody" />
+                <ScalarProperty Name="MSSEnd_FSTStates_SPDMPSU" ColumnName="MSSEnd_FSTStates_SPDMPSU" />
+                <ScalarProperty Name="MSSEnd_FSTStates_SSRMS" ColumnName="MSSEnd_FSTStates_SSRMS" />
+                <ScalarProperty Name="MSSEnd_FSTStates_POA" ColumnName="MSSEnd_FSTStates_POA" />
+                <ScalarProperty Name="MSSEnd_FSTStates_MBS" ColumnName="MSSEnd_FSTStates_MBS" />
+                <ScalarProperty Name="MSSEnd_SPDM_BasedOn" ColumnName="MSSEnd_SPDM_BasedOn" />
+                <ScalarProperty Name="MSSEnd_SSRMS_BasedOn_LEE" ColumnName="MSSEnd_SSRMS_BasedOn_LEE" />
+                <ScalarProperty Name="MSSEnd_MT_WS" ColumnName="MSSEnd_MT_WS" />
+                <ScalarProperty Name="MSSEnd_RWS_Cup" ColumnName="MSSEnd_RWS_Cup" />
+                <ScalarProperty Name="MSSEnd_RWS_Lab" ColumnName="MSSEnd_RWS_Lab" />
+                <ScalarProperty Name="MSSStart_Joints_EOTP" ColumnName="MSSStart_Joints_EOTP" />
+                <ScalarProperty Name="MSSStart_Joints_ARM2_WR" ColumnName="MSSStart_Joints_ARM2_WR" />
+                <ScalarProperty Name="MSSStart_Joints_ARM2_WY" ColumnName="MSSStart_Joints_ARM2_WY" />
+                <ScalarProperty Name="MSSStart_Joints_ARM2_WP" ColumnName="MSSStart_Joints_ARM2_WP" />
+                <ScalarProperty Name="MSSStart_Joints_ARM2_EP" ColumnName="MSSStart_Joints_ARM2_EP" />
+                <ScalarProperty Name="MSSStart_Joints_ARM2_SP" ColumnName="MSSStart_Joints_ARM2_SP" />
+                <ScalarProperty Name="MSSStart_Joints_ARM2_SY" ColumnName="MSSStart_Joints_ARM2_SY" />
+                <ScalarProperty Name="MSSStart_Joints_ARM2_SR" ColumnName="MSSStart_Joints_ARM2_SR" />
+                <ScalarProperty Name="MSSStart_Joints_ARM1_WR" ColumnName="MSSStart_Joints_ARM1_WR" />
+                <ScalarProperty Name="MSSStart_Joints_ARM1_WY" ColumnName="MSSStart_Joints_ARM1_WY" />
+                <ScalarProperty Name="MSSStart_Joints_ARM1_WP" ColumnName="MSSStart_Joints_ARM1_WP" />
+                <ScalarProperty Name="MSSStart_Joints_ARM1_EP" ColumnName="MSSStart_Joints_ARM1_EP" />
+                <ScalarProperty Name="MSSStart_Joints_ARM1_SP" ColumnName="MSSStart_Joints_ARM1_SP" />
+                <ScalarProperty Name="MSSStart_Joints_ARM1_SY" ColumnName="MSSStart_Joints_ARM1_SY" />
+                <ScalarProperty Name="MSSStart_Joints_ARM1_SR" ColumnName="MSSStart_Joints_ARM1_SR" />
+                <ScalarProperty Name="MSSStart_Joints_SSRMS_SPDMBR" ColumnName="MSSStart_Joints_SSRMS_SPDMBR" />
+                <ScalarProperty Name="MSSStart_Joints_SSRMS_WR" ColumnName="MSSStart_Joints_SSRMS_WR" />
+                <ScalarProperty Name="MSSStart_Joints_SSRMS_WY" ColumnName="MSSStart_Joints_SSRMS_WY" />
+                <ScalarProperty Name="MSSStart_Joints_SSRMS_WP" ColumnName="MSSStart_Joints_SSRMS_WP" />
+                <ScalarProperty Name="MSSStart_Joints_SSRMS_EP" ColumnName="MSSStart_Joints_SSRMS_EP" />
+                <ScalarProperty Name="MSSStart_Joints_SSRMS_SP" ColumnName="MSSStart_Joints_SSRMS_SP" />
+                <ScalarProperty Name="MSSStart_Joints_SSRMS_SY" ColumnName="MSSStart_Joints_SSRMS_SY" />
+                <ScalarProperty Name="MSSStart_Joints_SSRMS_SR" ColumnName="MSSStart_Joints_SSRMS_SR" />
+                <ScalarProperty Name="MSSStart_SPDMConfiguration" ColumnName="MSSStart_SPDMConfiguration" />
+                <ScalarProperty Name="MSSStart_SSRMSConfiguration" ColumnName="MSSStart_SSRMSConfiguration" />
+                <ScalarProperty Name="MSSStart_Payloads_POA" ColumnName="MSSStart_Payloads_POA" />
+                <ScalarProperty Name="MSSStart_Payloads_EOTP" ColumnName="MSSStart_Payloads_EOTP" />
+                <ScalarProperty Name="MSSStart_Payloads_MCAS" ColumnName="MSSStart_Payloads_MCAS" />
+                <ScalarProperty Name="MSSStart_Payloads_OTCM2" ColumnName="MSSStart_Payloads_OTCM2" />
+                <ScalarProperty Name="MSSStart_Payloads_OTCM1" ColumnName="MSSStart_Payloads_OTCM1" />
+                <ScalarProperty Name="MSSStart_Payloads_SPDMLee" ColumnName="MSSStart_Payloads_SPDMLee" />
+                <ScalarProperty Name="MSSStart_Payloads_SSRMSTipLee" ColumnName="MSSStart_Payloads_SSRMSTipLee" />
+                <ScalarProperty Name="MSSStart_FSTStates_SPDMArms" ColumnName="MSSStart_FSTStates_SPDMArms" />
+                <ScalarProperty Name="MSSStart_FSTStates_SPDMSACU" ColumnName="MSSStart_FSTStates_SPDMSACU" />
+                <ScalarProperty Name="MSSStart_FSTStates_SPDMBody" ColumnName="MSSStart_FSTStates_SPDMBody" />
+                <ScalarProperty Name="MSSStart_FSTStates_SPDMPSU" ColumnName="MSSStart_FSTStates_SPDMPSU" />
+                <ScalarProperty Name="MSSStart_FSTStates_SSRMS" ColumnName="MSSStart_FSTStates_SSRMS" />
+                <ScalarProperty Name="MSSStart_FSTStates_POA" ColumnName="MSSStart_FSTStates_POA" />
+                <ScalarProperty Name="MSSStart_FSTStates_MBS" ColumnName="MSSStart_FSTStates_MBS" />
+                <ScalarProperty Name="MSSStart_SPDM_BasedOn" ColumnName="MSSStart_SPDM_BasedOn" />
+                <ScalarProperty Name="MSSStart_SSRMS_BasedOn_LEE" ColumnName="MSSStart_SSRMS_BasedOn_LEE" />
+                <ScalarProperty Name="MSSStart_MT_WS" ColumnName="MSSStart_MT_WS" />
+                <ScalarProperty Name="MSSStart_RWS_Cup" ColumnName="MSSStart_RWS_Cup" />
+                <ScalarProperty Name="MSSStart_RWS_Lab" ColumnName="MSSStart_RWS_Lab" />
+                <ScalarProperty Name="ForwardOrOpenWork" ColumnName="ForwardOrOpenWork" />
+                <ScalarProperty Name="ShiftSummary" ColumnName="ShiftSummary" />
+                <ScalarProperty Name="IPCanada" ColumnName="IPCanada" />
+                <ScalarProperty Name="EVR" ColumnName="EVR" />
+                <ScalarProperty Name="ROBO_Task" ColumnName="ROBO_Task" />
+                <ScalarProperty Name="ROBO_Systems" ColumnName="ROBO_Systems" />
+                <ScalarProperty Name="ROBO_Lead" ColumnName="ROBO_Lead" />
+                <ScalarProperty Name="OEC_OPR" ColumnName="OEC_OPR" />
+                <ScalarProperty Name="OEC_FPL" ColumnName="OEC_FPL" />
+                <ScalarProperty Name="OEC_ESC" ColumnName="OEC_ESC" />
+                <ScalarProperty Name="OEC_ESL" ColumnName="OEC_ESL" />
+                <ScalarProperty Name="OEC_OECLead" ColumnName="OEC_OECLead" />
+                <ScalarProperty Name="ShiftDescription" ColumnName="ShiftDescription" />
+                <ScalarProperty Name="PreparedByESL" ColumnName="PreparedByESL" />
+                <ScalarProperty Name="Increment" ColumnName="Increment" />
+                <ScalarProperty Name="GMTHours" ColumnName="GMTHours" />
+                <ScalarProperty Name="GMTDay" ColumnName="GMTDay" />
+                <ScalarProperty Name="ReportDate" ColumnName="ReportDate" />
+                <ScalarProperty Name="Title" ColumnName="Title" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

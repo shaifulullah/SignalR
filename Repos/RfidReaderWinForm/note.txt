@@ -1,0 +1,9 @@
+Read RFID tag using LibUsbDotNet
+https://stackoverflow.com/questions/49221055/read-rfid-tag-using-libusbdotnet
+How to read from a usb rfid reader?
+https://stackoverflow.com/questions/22516812/how-to-read-from-a-usb-rfid-reader/35608485#35608485
+
+Get data from RFID reader
+https://www.codeproject.com/Questions/196102/Get-data-from-RFID-reader
+How to read RFID data from serial port in C# smart device?
+https://www.codeproject.com/Questions/80265/How-to-read-RFID-data-from-serial-port-in-C-smart

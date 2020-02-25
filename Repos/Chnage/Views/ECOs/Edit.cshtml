@@ -1,0 +1,324 @@
+﻿@model Chnage.ViewModel.ECO.ECOViewModel
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "_Layout";
+}
+<div class="row text-center">
+    <h2>
+        Edit Engineering Change Order
+    </h2>
+</div>
+<form asp-action="Edit" asp-controller="ECOs" id="formCreate">
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <ul class="nav nav-tabs" role="tablist">
+        <li role="presentation" class="active">
+            <a href="#main" aria-controls="main" role="tab" data-toggle="tab">
+                Main
+            </a>
+        </li>
+        <li role="presentation">
+            <a href="#products" aria-controls="main" role="tab" data-toggle="tab">
+                Affected Products
+            </a>
+        </li>
+    </ul>
+    <div class="tab-content">
+        <div role="tabpanel" class="tab-pane active" id="main">
+            <div class="text-danger h3" id="validationDiv">
+            </div>
+            <div class="row">
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <label asp-for="Id" class="control-label"></label>
+                        <input asp-for="Id" class="form-control" disabled />
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <label asp-for="ChangeTypeId" class="control-label"></label>
+                        <select asp-for="ChangeTypeId" class="form-control" asp-items="ViewBag.ChangeTypeId"></select>
+                        <span asp-validation-for="ChangeTypeId" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <label asp-for="PriorityLevel" class="control-label"></label>
+                        <select asp-for="PriorityLevel" asp-items="Html.GetEnumSelectList(typeof(PriorityLevel))" class="form-control"></select>
+                        <span asp-validation-for="PriorityLevel" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label asp-for="ImplementationType" class="control-label"></label>
+                        <select asp-for="ImplementationType" asp-items="Html.GetEnumSelectList(typeof(ImpType))" class="form-control"></select>
+                        <span asp-validation-for="ImplementationType" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label asp-for="PlannedImplementationDate" class="control-label"></label>
+                        <input asp-for="PlannedImplementationDate" class="form-control" />
+                        <span asp-validation-for="PlannedImplementationDate" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <div class="form-control">
+                            <label>
+                                @Html.DisplayNameFor(m => m.PermanentChange)
+                            </label>
+                            <input asp-for="PermanentChange" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <div class="form-control">
+                            <label>
+                                @Html.DisplayNameFor(model => model.BOMRequired)
+                            </label>
+                            <input asp-for="BOMRequired" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <div class="form-control">
+                            <label class="control-label">
+                                @Html.DisplayNameFor(m => m.ProductValidationTestingRequired)
+                            </label>
+                            <input asp-for="ProductValidationTestingRequired" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <div class="form-control">
+                            <label class="control-label">
+                                @Html.DisplayNameFor(model => model.CustomerApproval)
+                            </label>
+                            <input asp-for="CustomerApproval" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label asp-for="Description" class="control-label"></label>
+                        <textarea rows="8" asp-for="Description" class="form-control"> </textarea>
+                        <span asp-validation-for="Description" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label asp-for="ReasonForChange" class="control-label"></label>
+                        <textarea rows="8" asp-for="ReasonForChange" class="form-control"> </textarea>
+                        <span asp-validation-for="ReasonForChange" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <label>Links:</label>
+                    <label id="urlValidation" class="control-label text-danger"></label>
+                    <div class="row">
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <input type="text" id="linkName" placeholder="Name" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <input type="url" pattern="https://.*|http://.*" id="linkURL" class="form-control" placeholder="https://example.com" title="Enter a valid URl (https://)" />
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <ul class="list-group list-inline" id="URLRepresentation">
+                                @{
+                                    if (Model.LinkUrls != null)
+                                    {
+                                        foreach (var link in Model.LinkUrls)
+                                        { //this will display the links already in the database, using the LinkUrls column
+                                            <li class="list-group-item">
+                                                <span name="@link.Key" class="linkSpan">@link.Key</span>
+                                                <a href="@link.Value" target="_blank">@link.Value</a>
+                                                <i class="glyphicon glyphicon-remove" onclick="removeUrl(this)"></i>
+                                                <input name="LinkUrls[@link.Key]" type="hidden" value="@link.Value" />
+                                            </li>
+                                        }
+                                    }
+                                }
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group">
+                    <label class="control-label">
+                        @Html.DisplayNameFor(m => m.AreasAffected)
+                    </label>
+                    <ul class="list-inline">
+                        @for (int i = 0; i < Model.AreasAffected.Count; i++)
+                        { //displays the AreasAffected from the db
+                            <li>
+                                <label class="btn btn-primary">
+                                    @Html.CheckBoxFor(m => Model.AreasAffected[i].Selected, new { value = Model.AreasAffected[i].Selected, @class = "AreaCheckbox" })
+                                    @Model.AreasAffected[i].Name
+                                </label>
+                                @Html.HiddenFor(m => Model.AreasAffected[i].TypeId)
+                                @Html.HiddenFor(m => Model.AreasAffected[i].Name)
+                            </li>
+                        }
+                    </ul>
+                </div>
+                <div class="form-group">
+                    <ul class="list-inline" id="listValidatorInline">
+                        @{
+                            for (int i = 0; i < Model.ValidatorsList.Count; i++)
+                            { //displays the Approvers for the area (groupname)
+                                if (Model.ValidatorsList[i].Count() > 0)
+                                {
+                                    var groupName = Model.ValidatorsList[i].ElementAt(0).Group.Name;
+                                    <li name="@groupName" style="padding:7px;">
+                                        <label class="control-label">Validator for @groupName</label>
+                                        <br />
+                                        <select style="width:230px" multiple="multiple" name="ValidatorsList" asp-items="Model.ValidatorsList[i]" id="Validator_@groupName" class="form-control approvers SelectControl"></select>
+                                        @foreach (var noteId in Model.NotesForValidatorIds)
+                                        { //display the notes
+                                            if (noteId.Key == groupName)
+                                            {
+                                                <div class="form-group">
+                                                    <label>
+                                                        Notes for @noteId.Key
+                                                    </label>
+                                                    <textarea class="form-control" rows="5" name="NotesForValidatorIds[@noteId.Key]">@noteId.Value</textarea>
+                                                </div>
+                                            }
+                                        }
+                                    </li>
+                                }
+                            }
+                        }
+                    </ul>
+                </div>
+                <div class="form-group">
+                    <ul class="list-inline" id="listApproverInline">
+                        @{
+                            for (int i = 0; i < Model.ApproversList.Count; i++)
+                            { //displays the Approvers for the area (groupname)
+                                if (Model.ApproversList[i].Count() > 0)
+                                {
+                                    var groupName = Model.ApproversList[i].ElementAt(0).Group.Name;
+                                    <li name="@groupName" style="padding:7px;">
+                                        <label class="control-label">Approvers for @groupName</label>
+                                        <br />
+                                        <select style="width:230px" multiple="multiple" name="ApproversList" asp-items="Model.ApproversList[i]" id="@groupName" class="form-control approvers SelectControl"></select>
+                                        @foreach (var noteId in Model.NotesForApproverIds)
+                                        { //display the notes
+                                            if (noteId.Key == groupName)
+                                            {
+                                                <div class="form-group">
+                                                    <label>
+                                                        Notes for @noteId.Key
+                                                    </label>
+                                                    <textarea class="form-control" rows="5" name="NotesForApproverIds[@noteId.Key]">@noteId.Value</textarea>
+                                                </div>
+                                            }
+                                        }
+                                    </li>
+                                }
+                            }
+                        }
+                    </ul>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label asp-for="PreviousRevision"></label>
+                        <input type="text" asp-for="PreviousRevision" class="form-control" />
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label asp-for="NewRevision"></label>
+                        <input type="text" asp-for="NewRevision" class="form-control" />
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label>Sending Notifications to:</label>
+                        <select title="To select multiple users press the control key and click on the users" asp-for="UsersToBeNotified" asp-items="ViewBag.Notifications" class="form-control SelectControl" multiple="multiple"></select>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <label class="control-label" asp-for="RelatedECRs"></label>
+                        <select asp-for="RelatedECRIds" asp-items="Model.RelatedECRs" class="form-control SelectControl" multiple="multiple"></select>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label class="control-label">Originator</label>
+                        <select class="form-control" asp-for="OriginatorId" asp-items="ViewBag.OriginatorId"></select>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>&nbsp;</label>
+                            <input type="button" value="Save as Draft" class="btn btn-block btn-default" id="btnSave" />
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>&nbsp;</label>
+                            @{
+                                string btnName = "";
+                                if (Model.Status == StatusOptions.Draft)
+                                {
+                                    btnName = "Submit";
+                                }
+                                else
+                                {
+                                    btnName = "Save";
+                                }
+                            }
+                            <input type="button" value="@btnName" class="btn btn-block btn-success" id="btnSubmit" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 hidden">
+                <input type="hidden" asp-for="Id" />
+                <select asp-for="Status" class="form-control" asp-items="Html.GetEnumSelectList(typeof(StatusOptions))"> </select>
+            </div>
+        </div>
+        <div role="tabpanel" class="tab-pane" id="products">
+            <partial name="PartialProductList" model="Model.ProductList" />
+        </div>
+    </div>
+</form>
+
+<script>
+    $(function () {
+        $('#btnSubmit').click(function myfunction() { //when the Create btn is clicked
+            //$("#Status option").removeAttr("selected"); //reset the status option
+            //$("#Status option[value='3']").attr("selected", "selected"); //set the status to the option 3, which is awaiting approval
+            checkECOUserInputs(this); //checks for the inputs in the form
+        })
+        $("#btnSave").click(function () { //same thing as above
+            //$("#Status option").removeAttr("selected");
+            //$("#Status option[value='0']").attr("selected", "selected"); //but sets the status option to 0, which is Draft
+            checkECOUserInputs(this);
+        })
+    })
+</script>
+

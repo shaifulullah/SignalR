@@ -1,0 +1,54 @@
+﻿@model ExternalPersonViewModel
+
+@using (Html.BeginForm(string.Empty, "ExternalPerson", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    <div class="content">
+        <div id="error-display" class="popup-error">
+            @ViewBag.ErrorMessage
+        </div>
+
+        <div class="padding-bottom-5">
+            @Html.Button(ResourceStrings.Text_Save, new { @class = "save-button", @type = "button", @id = "imgBtSave" },
+                Model.DataAction != DataOperation.EDIT_VIEW || AuthorizeUser.CanPerformAction(PageId.PAGE_EXTERNALPERSON, DataOperation.UPDATE))
+        </div>
+
+        <fieldset class="form-layout">
+            <legend></legend>
+
+            @Html.Hidden("title", string.Format("{0} [{1}]", ApplicationGlobals.GetActionText(Model.DataAction), ResourceStrings.Text_ExternalPerson))
+
+            @Html.HiddenFor(model => model.DataAction)
+            @Html.HiddenFor(model => model.LnExternalCompanyId)
+            @Html.HiddenFor(model => model.IsActive)
+
+            <table class="form-table">
+                <tr>
+                    <td class="form-label">@Html.LabelFor(model => model.PersonCode)<b class="form-required">&#42;</b></td>
+                    <td>@Html.EditorFor(model => model.PersonCode)</td>
+                    <td class="form-error">@Html.ValidationMessageFor(model => model.PersonCode)</td>
+                </tr>
+                <tr>
+                    <td class="form-label">@Html.LabelFor(model => model.FirstName)<b class="form-required">&#42;</b></td>
+                    <td>@Html.EditorFor(model => model.FirstName)</td>
+                    <td class="form-error">@Html.ValidationMessageFor(model => model.FirstName)</td>
+                </tr>
+                <tr>
+                    <td class="form-label">@Html.LabelFor(model => model.LastName)<b class="form-required">&#42;</b></td>
+                    <td>@Html.EditorFor(model => model.LastName)</td>
+                    <td class="form-error">@Html.ValidationMessageFor(model => model.LastName)</td>
+                </tr>
+                <tr>
+                    <td class="form-label">@Html.LabelFor(model => model.eMail)</td>
+                    <td>@Html.TextBoxFor(model => model.eMail)</td>
+                    <td class="form-error">@Html.ValidationMessageFor(model => model.eMail)</td>
+                </tr>
+            </table>
+        </fieldset>
+
+        @if (Model.DataAction == DataOperation.EDIT_VIEW)
+        {
+            @Html.HiddenFor(model => model.Id, new { id = "hidId" })
+        }
+    </div>
+}

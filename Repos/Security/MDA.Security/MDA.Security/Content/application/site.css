@@ -1,0 +1,409 @@
+﻿body {
+    margin: 0px;
+}
+
+html {
+    font-family: Arial, Helvetica, Times;
+    font-size: 0.75em;
+}
+
+.header-background {
+    height: 50px;
+    width: 100%;
+    background-repeat: repeat-x;
+}
+
+.header-logo,
+.header-application {
+    float: left;
+    position: absolute;
+}
+
+.header-logo {
+    top: 10px;
+    left: 20px;
+}
+
+.header-application {
+    top: 5px;
+    left: 220px;
+    font-weight: 300;
+}
+
+.header-location {
+    padding: 5px;
+    font-weight: bolder;
+    border-top: 2px solid #000000;
+    border-top-color: #daecf4;
+}
+
+.content-navigation {
+    width: 21%;
+    float: left;
+}
+
+.content-detail {
+    width: 79%;
+    float: right;
+}
+
+.content,
+.navigation {
+    padding: 5px;
+}
+
+.error, .popup-error {
+    display: inline;
+    float: right;
+    border: 1px solid #000000;
+    background-color: #000000;
+    padding: 4px;
+    color: #FFFFFF;
+    font-weight: bold;
+    position: absolute;
+    z-index: 101;
+    right: 0px;
+    top: 50px;
+}
+
+.popup-error {
+    right: 10px;
+    top: 10px;
+}
+
+a {
+    color: black;
+    text-decoration: none;
+}
+
+    a:hover {
+        text-decoration: underline;
+    }
+
+textarea {
+    font-family: inherit;
+    font-size: inherit;
+}
+
+input[type=file] {
+    width: 308px;
+}
+
+input[type=text], textarea,
+input[type=number],
+input[type=password],
+input[type=url],
+input[type=email] {
+    padding: 3px;
+    width: 300px;
+}
+
+    input[type=text][disabled],
+    input[type=text][readonly] {
+        color: #909090;
+        border: 1px dashed #909090;
+    }
+
+.padding-bottom-5 {
+    padding-bottom: 5px;
+}
+
+.padding-top-5 {
+    padding-top: 5px;
+}
+
+.search-box input[type=button],
+.search-box input[type=button]:hover {
+    padding: 3px;
+    position: relative;
+    left: -5px;
+    border: 1px solid #909090;
+    width: 22px;
+    background-image: url("../../Images/search_icon.png");
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+    .search-box input[type=button]:active {
+        background-position: +5px +3px;
+    }
+
+.search-box input[type=text] {
+    width: 271px;
+    border: 1px dashed #909090;
+    padding: 3px;
+}
+
+    .search-box input[type=text][disabled],
+    .search-box input[type=text][readonly] {
+        border: 1px dashed #909090;
+    }
+
+.form-table {
+    width: 100%;
+}
+
+    .form-table th,
+    .form-table td {
+        padding: 5px;
+    }
+
+.form-layout {
+    padding: 5px;
+}
+
+.form-label {
+    white-space: nowrap;
+    font-weight: bolder;
+}
+
+.form-error {
+    font-weight: bolder;
+    color: #DE0031;
+    width: 100%;
+}
+
+.form-required {
+    color: #DE0031;
+    padding-left: 2px;
+}
+
+.bread-crumbs {
+    padding: 5px;
+    padding-left: 0px;
+    font-weight: bolder;
+}
+
+.master-detail {
+    padding: 5px;
+    font-weight: bolder;
+    border: 1px solid #94C0D2;
+}
+
+.pdf-button, .xls-button, .edit-button, .copy-button, .delete-button, .insert-button, .submit-button, .login-button, .previous-button,
+.unselect-all-button, .save-button, .select-button, .previous-button:disabled, .view-button, .users-button, .security-button, .role-button, .company-button,
+.persons-button, .application-settings-button, .access-by-activedirectory-button, .access-by-role-button, .access-by-user-button, .restriction-by-activedirectory-button,
+.restriction-by-role-button, .restriction-by-user-button, .application-favourites-button, .delegate-button, .user-application-settings-button, .cancel-button, .user-attribute-button {
+    background-repeat: no-repeat;
+    background-position: left center;
+    padding-left: 22px;
+    height: 24px;
+    border: 1px solid #A0A0A0;
+    background-position: 3px, 50%;
+}
+
+.cancel-button {
+    background-image: url("../../Images/cancel_icon.png");
+}
+
+.pdf-button {
+    background-image: url("../../Images/pdf_icon.png");
+}
+
+.xls-button {
+    background-image: url("../../Images/xls_icon.png");
+}
+
+.insert-button {
+    background-image: url("../../Images/insert_icon.png");
+}
+
+.edit-button {
+    background-image: url("../../Images/edit_icon.png");
+}
+
+.copy-button {
+    background-image: url("../../Images/copy_icon.png");
+}
+
+.delete-button {
+    background-image: url("../../Images/delete_icon.png");
+}
+
+.submit-button {
+    background-image: url("../../Images/submit_icon.png");
+}
+
+.login-button {
+    background-image: url("../../Images/login_icon.png");
+}
+
+.previous-button {
+    background-image: url("../../Images/previous_icon.png");
+}
+
+    .previous-button:disabled {
+        background-image: url("../../Images/previous_icon_disabled.png");
+    }
+
+.unselect-all-button {
+    background-image: url("../../Images/unselect_all.png");
+}
+
+.save-button {
+    background-image: url("../../Images/save_icon.png");
+}
+
+.select-button {
+    background-image: url("../../Images/select_icon.png");
+}
+
+.view-button {
+    background-image: url("../../Images/view_icon.png");
+}
+
+.users-button {
+    background-image: url("../../Images/users_icon.png");
+}
+
+.security-button {
+    background-image: url("../../Images/security_icon.png");
+}
+
+.role-button {
+    background-image: url("../../Images/roles_icon.png");
+}
+
+.application-settings-button {
+    background-image: url("../../Images/application_settings_icon.png");
+}
+
+.persons-button {
+    background-image: url("../../Images/persons_icon.png");
+}
+
+.company-button {
+    background-image: url("../../Images/company_icon.png");
+}
+
+.access-by-activedirectory-button {
+    background-image: url("../../Images/access_by_AD_icon.png");
+}
+
+.access-by-role-button {
+    background-image: url("../../Images/access_by_role_icon.png");
+}
+
+.access-by-user-button {
+    background-image: url("../../Images/access_by_user_icon.png");
+}
+
+.user-application-settings-button {
+    background-image: url("../../Images/user_application_settings_icon.png")
+}
+
+.user-attribute-button {
+    background-image: url("../../Images/user_application_settings_icon.png")
+}
+
+.restriction-by-activedirectory-button {
+    background-image: url("../../Images/restriction_by_AD_icon.png");
+}
+
+.restriction-by-role-button {
+    background-image: url("../../Images/restriction_by_role_icon.png");
+}
+
+.restriction-by-user-button {
+    background-image: url("../../Images/restriction_by_user_icon.png");
+}
+
+.application-favourites-button {
+    background-image: url("../../Images/application_favourites_icon.png");
+}
+
+.delegate-button {
+    background-image: url("../../Images/delegate_icon.png");
+}
+
+.next-button {
+    background-repeat: no-repeat;
+    background-position: right center;
+    padding-right: 22px;
+    height: 24px;
+    border: 1px solid #A0A0A0;
+    background-position: 95%, 50%;
+    background-image: url("../../Images/next_icon.png");
+}
+
+    .next-button:disabled {
+        background-repeat: no-repeat;
+        background-position: right center;
+        padding-right: 22px;
+        height: 24px;
+        border: 1px solid #A0A0A0;
+        background-position: 95%, 50%;
+        background-image: url("../../Images/next_icon_disabled.png");
+    }
+
+.k-grid td {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+input[type="checkbox"] {
+    margin: 0px;
+}
+
+.grid-search-button, .popup-grid-search-button {
+    background-image: url("../../Images/search_icon.png");
+}
+
+.grid-search-button, .popup-grid-search-button {
+    position: relative;
+    left: -3px;
+    bottom: -7px;
+    background-repeat: no-repeat;
+    background-position: left center;
+    padding-left: 22px;
+    border: 1px solid #a0a0a0;
+    background-position: 7px, 50%;
+}
+
+.clear-button {
+    position: relative;
+    left: -15px;
+    background-repeat: no-repeat;
+    background-position: left center;
+    padding-left: 22px;
+    border: 1px solid #a0a0a0;
+    background-position: 7px, 50%;
+    height: 19px;
+    background-image: url("../../Images/clear_icon.png");
+}
+
+.grid-search-button {
+    height: 23px;
+}
+
+.popup-grid-search-button {
+    height: 19px;
+}
+
+.gridCheckBox {
+    margin: 0px;
+    visibility: hidden;
+}
+
+legend {
+    padding: 0px;
+}
+
+fieldset {
+    border: 1px solid #A0A0A0;
+    margin: 0;
+}
+
+.k-datepicker {
+    width: 304px;
+}
+
+ .dropdown-submenu {
+    position: relative;
+}
+
+.dropdown-submenu .dropdown-menu {
+    top: 0;
+    left: -63%;
+    margin-top: -1px;
+}

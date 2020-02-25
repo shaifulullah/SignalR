@@ -1,0 +1,54 @@
+﻿@model UserSettingsViewModel
+
+@using (Html.BeginForm(string.Empty, "UserSettings", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    <div class="content">
+        <div id="error-display" class="popup-error">
+            @ViewBag.ErrorMessage
+        </div>
+
+        <div class="padding-bottom-5">
+            @Html.Button(ResourceStrings.Text_Save, new { @class = "save-button", @type = "button", @id = "imgBtSave" },
+                Model.DataAction != DataOperation.EDIT_VIEW || AuthorizeUser.CanPerformAction(PageId.PAGE_USERSETTINGS, DataOperation.UPDATE))
+        </div>
+
+        <fieldset class="form-layout">
+            <legend></legend>
+
+            @Html.Hidden("title", string.Format("{0} [{1}]", ApplicationGlobals.GetActionText(Model.DataAction), ResourceStrings.Text_UserSettings))
+
+            @Html.HiddenFor(model => model.DataAction)
+            @Html.HiddenFor(model => model.LnUserInCompanyInApplicationId)
+
+            <table class="form-table">
+                <tr>
+                    <td class="form-label">@Html.LabelFor(model => model.KeyName)<b class="form-required">&#42;</b></td>
+                    <td>@Html.EditorFor(model => model.KeyName)</td>
+                    <td class="form-error">@Html.ValidationMessageFor(model => model.KeyName)</td>
+                </tr>
+                <tr>
+                    <td class="form-label">@Html.LabelFor(model => model.Separator)</td>
+                    <td>@Html.EditorFor(model => model.Separator)</td>
+                    <td class="form-error">@Html.ValidationMessageFor(model => model.Separator)</td>
+                </tr>
+                <tr>
+                    <td class="form-label">@Html.LabelFor(model => model.Value)<b class="form-required">&#42;</b></td>
+                    <td>@Html.EditorFor(model => model.Value)</td>
+                    <td class="form-error">@Html.ValidationMessageFor(model => model.Value)</td>
+                </tr>
+            </table>
+        </fieldset>
+
+        @if (Model.DataAction == DataOperation.EDIT_VIEW)
+        {
+            @Html.HiddenFor(model => model.Id, new { id = "hidId" })
+
+            <div class="padding-top-5" style="float: right">
+                @Html.Button(ResourceStrings.Text_Previous, new { @class = "previous-button", @type = "button", id = "imgBtPrevious" })
+                @Html.Label(ResourceStrings.Text_First_Record, new { id = "lblCurrentRecord" })
+                @Html.Button(ResourceStrings.Text_Next, new { @class = "next-button", @type = "button", id = "imgBtNext" })
+            </div>
+        }
+    </div>
+}

@@ -1,0 +1,118 @@
+﻿@{
+    ViewBag.Title = string.Format(ResourceStrings.Text_Identification, ResourceStrings.Text_ExternalPerson);
+}
+
+<script>
+    $(function () {
+        $("#gridExternalPerson").kendoGrid({
+            columns: [
+                {
+                    headerTemplate: "<input id='chBxSelectAll' type='checkbox' />",
+                    template: "<input id='chBxSelectRow' class='gridCheckBox' type='checkbox' />",
+                    filterable: false, sortable: false, groupable: false, width: 28
+                },
+                { field: "PersonCode", title: "@ResourceStrings.Display_Name_ExternalPerson_PersonCode" },
+                { field: "FullName", title: "@ResourceStrings.Display_Name_ExternalPerson_FullName" },
+                { field: "eMail", title: "@ResourceStrings.Display_Name_ExternalPerson_eMail" },
+                { field: "Id", title: "@ResourceStrings.Display_Name_ExternalPerson_Id", hidden: true },
+                { field: "IsActive", title: "@ResourceStrings.Display_Name_ExternalPerson_IsActive", template: '<input disabled="disabled" type="checkbox" #=IsActive?"checked=checked":""# />' }
+            ],
+            pageable: { input: false, numeric: true, refresh: true, pageSizes: [15, 20, 30, 40, 50] },
+            groupable: true,
+            sortable: { allowUnsort: false },
+            filterable: true,
+            resizable: true,
+            dataBound: onDataBound,
+            dataSource: {
+                serverPaging: true, serverFiltering: true, serverSorting: true, pageSize: '@ApplicationGlobals.GridMinRows',
+                page: getPage("gridExternalPerson"),
+                sort: getSort("gridExternalPerson") == null ? { field: "PersonCode", dir: "asc" } : getSort("gridExternalPerson"),
+                filter: getFilter("gridExternalPerson"),
+                schema: {
+                    data: "Data", total: "Total",
+                    model: {
+                        id: "Id",
+                        fields: {
+                            "eMail": { type: "string" },
+                            "FullName": { type: "string" },
+                            "Id": { type: "number" },
+                            "IsActive": { type: "boolean" },
+                            "PersonCode": { type: "string" }
+                        }
+                    }
+                },
+                transport: {
+                    read: {
+                        url: "ExternalPerson/ExternalPersonPage",
+                        contentType: "application/json; charset=utf-8",
+                        type: "POST",
+                        dataType: "json"
+                    },
+                    parameterMap: function (data) {
+                        return JSON.stringify(data);
+                    }
+                }
+            }
+        });
+
+        $("#gridExternalPerson").attr("hiddenSelectedRows", "#hidGridCheckedRowsExternalPerson");
+    });
+</script>
+
+@using (Html.BeginForm(string.Empty, "ExternalPerson", FormMethod.Post))
+{
+    <div class="content">
+        <div id="error-display" class="error">
+            @ViewBag.ErrorMessage
+        </div>
+
+        @Html.GenerateBreadCrumbs("ExternalCompany", ResourceStrings.Text_ExternalPerson)
+        @Html.GenerateMasterDetail("ExternalCompany")
+
+        <div class="padding-bottom-5">
+            @Html.Button(ResourceStrings.Text_New, new { @class = "insert-button", @type = "button", @id = "imgBtNew" }, AuthorizeUser.CanPerformAction(PageId.PAGE_EXTERNALPERSON, DataOperation.CREATE))
+            @Html.Button(ResourceStrings.Text_Edit_View, new { @class = "edit-button", @type = "button", @id = "imgBtSingleEdit" }, AuthorizeUser.CanPerformAction(PageId.PAGE_EXTERNALPERSON, DataOperation.READ) || AuthorizeUser.CanPerformAction(PageId.PAGE_EXTERNALPERSON, DataOperation.UPDATE))
+            @Html.Button(ResourceStrings.Text_Copy, new { @class = "copy-button", @type = "button", @id = "imgBtCopy" }, AuthorizeUser.CanPerformAction(PageId.PAGE_EXTERNALPERSON, DataOperation.CREATE))
+            @Html.Button(ResourceStrings.Text_Delete, new { @class = "delete-button", @type = "button", @id = "imgBtSingleDelete" }, AuthorizeUser.CanPerformAction(PageId.PAGE_EXTERNALPERSON, DataOperation.DELETE))
+        </div>
+
+        @(Html.Search("ExternalPersonSearch").Form("ExternalPersonForm").Grid("gridExternalPerson"))
+        <div id="gridExternalPerson"></div>
+    </div>
+
+    @Html.Hidden("hidGridCheckedRowsExternalPerson")
+}
+
+<script>
+    $(function () {
+        $("#imgBtCopy").click(function (e) {
+            return isActive("Copy", e);
+        });
+
+        $("#imgBtSingleEdit").click(function (e) {
+            return isActive("Edit", e);
+        });
+    });
+
+    function isActive(action, e) {
+        var returnValue = validateSelectedRows(action, false, e);
+
+        if (returnValue) {
+            $.ajax({
+                url: "ExternalPerson/IsActiveRecord",
+                data: { id: $("#hidGridCheckedRowsExternalPerson").val() },
+                type: "POST",
+                async: false,
+                success: function (result) {
+                    returnValue = result;
+                    $("#error-display").html(result ? "" : '@ResourceStrings.Error_Message_InActive');
+                }
+            });
+        }
+
+        return returnValue;
+    }
+</script>
+
+<div id="window"></div>
+@Scripts.Render("~/bundles/popup", "~/bundles/grid")

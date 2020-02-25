@@ -1,0 +1,89 @@
+﻿@{
+    ViewBag.Title = string.Format(ResourceStrings.Text_Identification, ResourceStrings.Text_Application);
+}
+
+<script>
+    $(function () {
+        removeCookies("gridCompanyInApplication");
+
+        $("#gridApplication").prop("selectedRows", $.cookie("SELECTED-gridApplication"));
+        $("#hidGridCheckedRowsApplication").val($.cookie("SELECTED-gridApplication"));
+
+        $("#gridApplication").kendoGrid({
+            columns: [
+                {
+                    headerTemplate: "<input id='chBxSelectAll' type='checkbox' />",
+                    template: "<input id='chBxSelectRow' class='gridCheckBox' type='checkbox' />",
+                    filterable: false, sortable: false, groupable: false, width: 28
+                },
+                { field: "Code", title: "@ResourceStrings.Display_Name_Application_Code" },
+                { field: "Description", title: "@ResourceStrings.Display_Name_Application_Description" },
+                { field: "Id", title: "@ResourceStrings.Display_Name_Application_Id", hidden: true },
+                { field: "Url", title: "@ResourceStrings.Display_Name_Application_Url" }
+            ],
+            pageable: { input: false, numeric: true, refresh: true, pageSizes: [15, 20, 30, 40, 50] },
+            groupable: true,
+            sortable: { allowUnsort: false },
+            filterable: true,
+            resizable: true,
+            dataBound: onDataBound,
+            dataSource: {
+                serverPaging: true, serverFiltering: true, serverSorting: true, pageSize: '@ApplicationGlobals.GridMinRows',
+                page: getPage("gridApplication"),
+                sort: getSort("gridApplication") == null ? { field: "Code", dir: "asc" } : getSort("gridApplication"),
+                filter: getFilter("gridApplication"),
+                schema: {
+                    data: "Data", total: "Total",
+                    model: {
+                        id: "Id",
+                        fields: {
+                            "Code": { type: "string" },
+                            "Description": { type: "string" },
+                            "Id": { type: "number" },
+                            "Url": { type: "string" }
+                        }
+                    }
+                },
+                transport: {
+                    read: {
+                        url: "Application/ApplicationPage",
+                        contentType: "application/json; charset=utf-8",
+                        type: "POST",
+                        dataType: "json"
+                    },
+                    parameterMap: function (data) {
+                        return JSON.stringify(data);
+                    }
+                }
+            }
+        });
+
+        $("#gridApplication").attr("hiddenSelectedRows", "#hidGridCheckedRowsApplication");
+    });
+</script>
+
+@using (Html.BeginForm(string.Empty, "Application", FormMethod.Post))
+{
+    <div class="content">
+        <div id="error-display" class="error">
+            @ViewBag.ErrorMessage
+        </div>
+
+        <div class="padding-bottom-5">
+            @Html.Button(ResourceStrings.Text_New, new { @class = "insert-button", @type = "button", @id = "imgBtNew" }, AuthorizeUser.CanPerformAction(PageId.PAGE_APPLICATION, DataOperation.CREATE))
+            @Html.Button(ResourceStrings.Text_Edit_View, new { @class = "edit-button", @type = "button", @id = "imgBtEdit" }, AuthorizeUser.CanPerformAction(PageId.PAGE_APPLICATION, DataOperation.READ) || AuthorizeUser.CanPerformAction(PageId.PAGE_APPLICATION, DataOperation.UPDATE))
+            @Html.Button(ResourceStrings.Text_Copy, new { @class = "copy-button", @type = "button", @id = "imgBtCopy" }, AuthorizeUser.CanPerformAction(PageId.PAGE_APPLICATION, DataOperation.CREATE))
+            @Html.Button(ResourceStrings.Text_Delete, new { @class = "delete-button", @type = "button", @id = "imgBtDelete" }, AuthorizeUser.CanPerformAction(PageId.PAGE_APPLICATION, DataOperation.DELETE))
+
+             @Html.Button(ResourceStrings.Text_Company, new { @class = "company-button", @value = "Company", @name = "ApplicationForm", @id = "imgBtCompany" }, AuthorizeUser.CanPerformAction(PageId.PAGE_COMPANYINAPPLICATION, DataOperation.ACCESS))
+        </div>
+
+        @(Html.Search("ApplicationSearch").Form("ApplicationForm").Grid("gridApplication"))
+        <div id="gridApplication"></div>
+    </div>
+
+    @Html.Hidden("hidGridCheckedRowsApplication")
+}
+
+<div id="window"></div>
+@Scripts.Render("~/bundles/popup", "~/bundles/grid")

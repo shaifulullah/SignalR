@@ -1,0 +1,16 @@
+﻿@model IEnumerable<TreeMenu>
+@{
+    var resourceManager = new System.Resources.ResourceManager("MDA.Security.Resources.ResourceStrings", typeof(ResourceStrings).Assembly);
+}
+
+@(Html.TreeView(@Model)
+    .HtmlAttributes(new { id = "treeMenu" })
+    .Id(m => m.Id)
+    .HasChildren(m => m.HasChildren)
+    .ParentId(m => m.LnParentId)
+    .ItemText(m => m.Description)
+    .ItemTemplate(@<text>@(string.IsNullOrEmpty(item.URL) ?
+        new MvcHtmlString(resourceManager.GetString(item.Description)) :
+        @Html.ActionLink(resourceManager.GetString(item.Description), item.URL, string.Empty, null, new { title = resourceManager.GetString(item.Description) }))</text>))
+
+@Scripts.Render(ApplicationGlobals.CanDisplayTreeMenuVertical ? "~/bundles/treeview" : "~/bundles/treeviewhorizontal")

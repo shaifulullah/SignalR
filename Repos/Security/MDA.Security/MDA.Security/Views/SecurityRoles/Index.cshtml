@@ -1,0 +1,191 @@
+﻿@{
+    ViewBag.Title = string.Format(ResourceStrings.Text_Identification, ResourceStrings.Text_SecurityRoles);
+}
+
+<script>
+    $(function () {
+        removeCookies("gridSecurityRoleRights,gridSecurityUserInRoles");
+
+        $("#gridSecurityRoles").prop("selectedRows", $.cookie("SELECTED-gridSecurityRoles"));
+        $("#hidGridCheckedRowsSecurityRoles").val($.cookie("SELECTED-gridSecurityRoles"));
+
+        $("#gridSecurityRoles").kendoGrid({
+            columns: [
+                {
+                    headerTemplate: "<input id='chBxSelectAll' type='checkbox' />",
+                    template: "<input id='chBxSelectRow' class='gridCheckBox' type='checkbox' />",
+                    filterable: false, sortable: false, groupable: false, width: 28
+                },
+                { field: "Code", title: "@ResourceStrings.Display_Name_SecurityRoles_Code" },
+                { field: "Description", title: "@ResourceStrings.Display_Name_SecurityRoles_Description" },
+                { field: "Id", title: "@ResourceStrings.Display_Name_SecurityRoles_Id", hidden: true },
+                { field: "LnActiveDirectoryGroupName", title: "@ResourceStrings.Display_Name_SecurityRoles_LnActiveDirectoryGroupName" },
+                { field: "LnSkillCode", title: "@ResourceStrings.Display_Name_SecurityRoles_LnSkillCode" },
+                { field: "IsDeleted", title: "@ResourceStrings.Display_Name_SecurityRoles_IsDeleted", template: '<input disabled="disabled" type="checkbox" #=IsDeleted?"checked=checked":""# />' }
+            ],
+            pageable: { input: false, numeric: true, refresh: true, pageSizes: [15, 20, 30, 40, 50] },
+            groupable: true,
+            sortable: { allowUnsort: false },
+            filterable: true,
+            resizable: true,
+            dataBound: onDataBound,
+            dataSource: {
+                serverPaging: true, serverFiltering: true, serverSorting: true, pageSize: '@ApplicationGlobals.GridMinRows',
+                page: getPage("gridSecurityRoles"),
+                sort: getSort("gridSecurityRoles") == null ? { field: "Code", dir: "asc" } : getSort("gridSecurityRoles"),
+                filter: getFilter("gridSecurityRoles"),
+                schema: {
+                    data: "Data", total: "Total",
+                    model: {
+                        id: "Id",
+                        fields: {
+                            "Code": { type: "string" },
+                            "Description": { type: "string" },
+                            "Id": { type: "number" },
+                            "LnActiveDirectoryGroupName": { type: "string" },
+                            "LnSkillCode": { type: "string" },
+                            "IsDeleted": { type: "boolean" }
+                        }
+                    }
+                },
+                transport: {
+                    read: {
+                        url: "SecurityRoles/SecurityRolesPage",
+                        contentType: "application/json; charset=utf-8",
+                        type: "POST",
+                        dataType: "json"
+                    },
+                    parameterMap: function (data) {
+                        return JSON.stringify(data);
+                    }
+                }
+            }
+        });
+
+        $("#gridSecurityRoles").attr("hiddenSelectedRows", "#hidGridCheckedRowsSecurityRoles");
+    });
+</script>
+
+@using (Html.BeginForm(string.Empty, "SecurityRoles", FormMethod.Post))
+{
+    <div class="content">
+        <div id="error-display" class="error">
+            @ViewBag.ErrorMessage
+        </div>
+
+        @Html.GenerateBreadCrumbs("Application,CompanyInApplication", ResourceStrings.Text_SecurityRoles)
+        @Html.GenerateMasterDetail("Application,CompanyInApplication")
+
+        <div class="padding-bottom-5">
+            @Html.Button(ResourceStrings.Text_New, new { @class = "insert-button", @type = "button", @id = "imgBtNew" }, AuthorizeUser.CanPerformAction(PageId.PAGE_SECURITYROLES, DataOperation.CREATE))
+            @Html.Button(ResourceStrings.Text_Edit_View, new { @class = "edit-button", @type = "button", @id = "imgBtSingleEdit" }, AuthorizeUser.CanPerformAction(PageId.PAGE_SECURITYROLES, DataOperation.READ) || AuthorizeUser.CanPerformAction(PageId.PAGE_SECURITYROLES, DataOperation.UPDATE))
+            @Html.Button(ResourceStrings.Text_Copy, new { @class = "copy-button", @type = "button", @id = "imgBtCopy" }, AuthorizeUser.CanPerformAction(PageId.PAGE_SECURITYROLES, DataOperation.CREATE))
+            @Html.Button(ResourceStrings.Text_Delete, new { @class = "delete-button", @type = "button", @id = "imgBtSingleDelete" }, AuthorizeUser.CanPerformAction(PageId.PAGE_SECURITYROLES, DataOperation.DELETE))
+
+            @Html.Button(ResourceStrings.Text_Users, new { @class = "users-button", @value = "Users", @name = "SecurityRolesForm", @id = "imgBtUsersInRoles" }, AuthorizeUser.CanPerformAction(PageId.PAGE_SECURITYUSERINROLES, DataOperation.ACCESS))
+            @Html.Button(ResourceStrings.Text_Security_Items, new { @class = "security-button", @value = "Security Items", @name = "SecurityRolesForm", @id = "imgBtSecurityItemsInRoles" }, AuthorizeUser.CanPerformAction(PageId.PAGE_SECURITYROLERIGHTS, DataOperation.ACCESS))
+        </div>
+
+        @(Html.Search("SecurityRolesSearch").Form("SecurityRolesForm").Grid("gridSecurityRoles"))
+        <div id="gridSecurityRoles"></div>
+    </div>
+
+    @Html.Hidden("hidGridCheckedRowsSecurityRoles")
+}
+
+@if (AuthorizeUser.CanPerformAction(PageId.PAGE_SECURITYROLES, DataOperation.CREATE) || AuthorizeUser.CanPerformAction(PageId.PAGE_SECURITYROLES, DataOperation.UPDATE))
+{
+    @(Html.SearchBox("imgBtLnSkillCode")
+        .ReturnValue("Skill")
+        .MultiSelect(false)
+        .Title(ResourceStrings.Text_Skill)
+        .Sort("Skill")
+        .Id("Skill")
+        .Controller("SecurityRoles")
+        .Action("SkillsPage")
+        .BindData("bindSkillCode")
+        .Columns(string.Format("Skill:{0}:string:false:96", ResourceStrings.Display_Name_RO_Skills_Skill)))
+
+    @(Html.SearchBox("imgBtLnActiveDirectoryGroupName")
+        .ReturnValue("GroupName")
+        .MultiSelect(false)
+        .Title(ResourceStrings.Text_ActiveDirectoryGroupName)
+        .Sort("GroupName")
+        .Id("GroupName")
+        .Controller("SecurityRoles")
+        .Action("ActiveDirectoryGroupNamePage")
+        .BindData("bindActiveDirectoryGroupName")
+        .Columns(string.Format("GroupName:{0}:string:false:66,DomainName:{1}:string:false:30", ResourceStrings.Display_Name_ActiveDirectoryGroup_GroupName, ResourceStrings.Display_Name_ActiveDirectoryGroup_DomainName)))
+}
+
+<script>
+    function bindSkillCode(returnValues) {
+        if (returnValues !== "") {
+            $("#txBxLnSkillCode").val(returnValues);
+            $("#txBxLnActiveDirectoryGroupName").val("");
+        }
+    }
+
+    function bindActiveDirectoryGroupName(returnValues) {
+        if (returnValues !== "") {
+            $("#txBxLnActiveDirectoryGroupName").val(returnValues);
+            $("#txBxLnSkillCode").val("");
+        }
+    }
+
+    $(function () {
+        $("#imgBtUsersInRoles").click(function (e) {
+            if (isNotDeleted("Assign Users", e)) {
+                var canAssignUsers = true;
+                $.ajax({
+                    url: "SecurityRoles/CanAssignUsers",
+                    data: { id: $("#hidGridCheckedRowsSecurityRoles").val() },
+                    type: "POST",
+                    async: false,
+                    success: function (result) {
+                        canAssignUsers = result;
+                        $("#error-display").html(canAssignUsers ? "" : '@ResourceStrings.Error_Message_Cannot_Assign_Users');
+                    }
+                });
+
+                return canAssignUsers;
+            }
+
+            return false;
+        });
+
+        $("#imgBtSecurityItemsInRoles").click(function (e) {
+            return isNotDeleted("Assign Security Items", e);
+        });
+
+        $("#imgBtCopy").click(function (e) {
+            return isNotDeleted("Copy", e);
+        });
+
+        $("#imgBtSingleEdit").click(function (e) {
+            return isNotDeleted("Edit", e);
+        });
+    });
+
+    function isNotDeleted(action, e) {
+        var returnValue = validateSelectedRows(action, false, e);
+
+        if (returnValue) {
+            $.ajax({
+                url: "SecurityRoles/IsDeleted",
+                data: { id: $("#hidGridCheckedRowsSecurityRoles").val() },
+                type: "POST",
+                async: false,
+                success: function (result) {
+                    returnValue = !result;
+                    $("#error-display").html(result ? '@ResourceStrings.Error_Message_Record_Deleted' : "");
+                }
+            });
+        }
+
+        return returnValue;
+    }
+</script>
+
+<div id="window"></div>
+@Scripts.Render("~/bundles/popup", "~/bundles/grid")

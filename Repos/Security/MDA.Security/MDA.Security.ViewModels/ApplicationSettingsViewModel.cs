@@ -1,0 +1,65 @@
+namespace MDA.Security.ViewModels
+{
+    using Models;
+    using Resources;
+    using System.ComponentModel.DataAnnotations;
+    using System.Web.Mvc;
+
+    public class ApplicationSettingsViewModel
+    {
+        /// <summary>
+        /// Initializes a new instance of the ApplicationSettingsViewModel class.
+        /// </summary>
+        public ApplicationSettingsViewModel()
+        {
+            DataAction = DataOperation.CREATE;
+        }
+
+        /// <summary>
+        /// Gets or sets CompanyInApplicationObj
+        /// </summary>
+        public CompanyInApplication CompanyInApplicationObj { get; set; }
+
+        /// <summary>
+        /// Gets or sets DataAction (CREATE/UPDATE/DELETE)
+        /// </summary>
+        public DataOperation DataAction { get; set; }
+
+        /// <summary>
+        /// Gets or sets Id
+        /// </summary>
+        [Display(Name = "Display_Name_ApplicationSettings_Id", ResourceType = typeof(ResourceStrings))]
+        [Required(ErrorMessageResourceType = typeof(ResourceStrings), ErrorMessageResourceName = "Error_Message_Required")]
+        public int Id { get; set; }
+
+        /// <summary>
+        /// Gets or sets KeyName
+        /// </summary>
+        [Display(Name = "Display_Name_ApplicationSettings_KeyName", ResourceType = typeof(ResourceStrings))]
+        [Required(ErrorMessageResourceType = typeof(ResourceStrings), ErrorMessageResourceName = "Error_Message_Required")]
+        [StringLength(255, ErrorMessageResourceType = typeof(ResourceStrings), ErrorMessageResourceName = "Error_Message_String_Length_Max")]
+        [Remote("IsKeyNameDuplicate", "ApplicationSettings", AdditionalFields = "Id", ErrorMessageResourceName = "Error_Message_Duplicate_Entry", ErrorMessageResourceType = typeof(ResourceStrings))]
+        public string KeyName { get; set; }
+
+        /// <summary>
+        /// Gets or sets LnCompanyInApplicationId
+        /// </summary>
+        [Display(Name = "Display_Name_ApplicationSettings_LnCompanyInApplicationId", ResourceType = typeof(ResourceStrings))]
+        [Required(ErrorMessageResourceType = typeof(ResourceStrings), ErrorMessageResourceName = "Error_Message_Required")]
+        public int LnCompanyInApplicationId { get; set; }
+
+        /// <summary>
+        /// Gets or sets Separator
+        /// </summary>
+        [Display(Name = "Display_Name_ApplicationSettings_Separator", ResourceType = typeof(ResourceStrings))]
+        [StringLength(1, ErrorMessageResourceType = typeof(ResourceStrings), ErrorMessageResourceName = "Error_Message_String_Length_Max")]
+        public string Separator { get; set; }
+
+        /// <summary>
+        /// Gets or sets Value
+        /// </summary>
+        [Display(Name = "Display_Name_ApplicationSettings_Value", ResourceType = typeof(ResourceStrings))]
+        [Required(ErrorMessageResourceType = typeof(ResourceStrings), ErrorMessageResourceName = "Error_Message_Required")]
+        public string Value { get; set; }
+    }
+}

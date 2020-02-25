@@ -1,0 +1,115 @@
+﻿@{
+    ViewBag.Title = string.Format(ResourceStrings.Text_Identification, ResourceStrings.Text_SecurityUserInRoles);
+}
+
+<script>
+    $(function () {
+        $("#gridSecurityUserInRoles").kendoGrid({
+            columns: [
+                {
+                    headerTemplate: "<input id='chBxSelectAll' type='checkbox' />",
+                    template: "<input id='chBxSelectRow' class='gridCheckBox' type='checkbox' />",
+                    filterable: false, sortable: false, groupable: false, width: 28
+                },
+                { field: "Id", title: "@ResourceStrings.Display_Name_SecurityUserInRoles_Id", hidden: true },
+                { field: "UserName", title: "@ResourceStrings.Display_Name_SecurityUserInRoles_UserName" },
+                { field: "FullName", title: "@ResourceStrings.Display_Name_SecurityUserInRoles_FullName" },
+                { field: "eMail", title: "@ResourceStrings.Display_Name_SecurityUserInRoles_eMail" },
+                { field: "Company", title: "@ResourceStrings.Display_Name_SecurityUserInRoles_Company" }
+            ],
+            pageable: { input: false, numeric: true, refresh: true, pageSizes: [15, 20, 30, 40, 50] },
+            groupable: true,
+            sortable: { allowUnsort: false },
+            filterable: true,
+            resizable: true,
+            dataBound: onDataBound,
+            dataSource: {
+                serverPaging: true, serverFiltering: true, serverSorting: true, pageSize: '@ApplicationGlobals.GridMinRows',
+                page: getPage("gridSecurityUserInRoles"),
+                sort: getSort("gridSecurityUserInRoles") == null ? { field: "UserName", dir: "asc" } : getSort("gridSecurityUserInRoles"),
+                filter: getFilter("gridSecurityUserInRoles"),
+                schema: {
+                    data: "Data", total: "Total",
+                    model: {
+                        id: "Id",
+                        fields: {
+                            "Id": { type: "number" },
+                            "UserName": { type: "string" },
+                            "FullName": { type: "string" },
+                            "eMail": { type: "string" },
+                            "Company": { type: "string" }
+                        }
+                    }
+                },
+                transport: {
+                    read: {
+                        url: "SecurityUserInRoles/SecurityUserInRolesPage",
+                        contentType: "application/json; charset=utf-8",
+                        type: "POST",
+                        dataType: "json"
+                    },
+                    parameterMap: function (data) {
+                        return JSON.stringify(data);
+                    }
+                }
+            }
+        });
+
+        $("#gridSecurityUserInRoles").attr("hiddenSelectedRows", "#hidGridCheckedRowsSecurityUserInRoles");
+    });
+</script>
+
+@using (Html.BeginForm(string.Empty, "SecurityUserInRoles", FormMethod.Post))
+{
+    <div class="content">
+        <div id="error-display" class="error">
+            @ViewBag.ErrorMessage
+        </div>
+
+        @Html.GenerateBreadCrumbs("Application,CompanyInApplication,SecurityRoles", ResourceStrings.Text_SecurityUserInRoles)
+        @Html.GenerateMasterDetail("Application,CompanyInApplication,SecurityRoles")
+
+        <div class="padding-bottom-5">
+            @Html.Button(ResourceStrings.Text_Add, new { @class = "insert-button", @type = "button", @id = "imgBtAdd" }, AuthorizeUser.CanPerformAction(PageId.PAGE_SECURITYUSERINROLES, DataOperation.CREATE))
+            @Html.Button(ResourceStrings.Text_Remove, new { @class = "delete-button", @type = "button", @id = "imgBtRemove" }, AuthorizeUser.CanPerformAction(PageId.PAGE_SECURITYUSERINROLES, DataOperation.DELETE))
+        </div>
+
+        @(Html.Search("SecurityUserInRolesSearch").Form("SecurityUserInRolesForm").Grid("gridSecurityUserInRoles"))
+        <div id="gridSecurityUserInRoles"></div>
+    </div>
+
+    @Html.Hidden("hidGridCheckedRowsSecurityUserInRoles")
+}
+
+@if (AuthorizeUser.CanPerformAction(PageId.PAGE_SECURITYUSERINROLES, DataOperation.CREATE))
+{
+    @(Html.SearchBox("imgBtAdd")
+        .Title(ResourceStrings.Text_Users)
+        .Sort("UserName")
+        .Controller("SecurityUserInRoles")
+        .Action("AvailableUserInCompanyInApplicationPageForSecurityRoles")
+        .BindData("add")
+        .Columns(string.Format("Id:{0}:number:true:0,UserName:{1}:string:false:15,FullName:{2}:string:false:30,eMail:{3}:string:false:36,Company:{4}:string:false:15",
+            ResourceStrings.Display_Name_UserAccountDetails_Id, ResourceStrings.Display_Name_UserAccountDetails_UserName,
+            ResourceStrings.Display_Name_UserAccountDetails_FullName, ResourceStrings.Display_Name_UserAccountDetails_eMail,
+            ResourceStrings.Display_Name_UserAccountDetails_Company)))
+}
+
+<script>
+    function add(returnValues) {
+        if (returnValues !== "") {
+            $.ajax({
+                url: "SecurityUserInRoles/Insert",
+                data: { ids: returnValues.split(',') },
+                traditional: true,
+                type: "POST",
+                success: function (message) {
+                    $("#error-display").text(message);
+                    $("#gridSecurityUserInRoles").data().kendoGrid.dataSource.read();
+                }
+            });
+        }
+    }
+</script>
+
+@Scripts.Render("~/bundles/grid")

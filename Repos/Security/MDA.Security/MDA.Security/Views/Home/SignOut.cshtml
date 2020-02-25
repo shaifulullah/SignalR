@@ -1,0 +1,13 @@
+﻿@{
+    ViewBag.Title = ResourceStrings.Text_SignOut;
+}
+
+<div class="content">
+    <fieldset class="form-layout">
+        <legend></legend>
+
+        <p><b>@(string.Format(ResourceStrings.Message_Click_Following_Link, ApplicationGlobals.ApplicationName))</b></p>
+        <br />
+        <p>@Html.ActionLink(ApplicationGlobals.ApplicationName, "Index", "Home")</p>
+    </fieldset>
+</div>

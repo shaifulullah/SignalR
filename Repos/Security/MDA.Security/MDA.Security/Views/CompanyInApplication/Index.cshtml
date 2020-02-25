@@ -1,0 +1,119 @@
+﻿@{
+    ViewBag.Title = string.Format(ResourceStrings.Text_Identification, ResourceStrings.Text_CompanyInApplication);
+}
+
+<script>
+    $(function () {
+        removeCookies("gridApplicationSettings,gridSecurityItem,gridSecurityRoles,gridUserInCompanyInApplication");
+
+        $("#gridCompanyInApplication").prop("selectedRows", $.cookie("SELECTED-gridCompanyInApplication"));
+        $("#hidGridCheckedRowsCompanyInApplication").val($.cookie("SELECTED-gridCompanyInApplication"));
+
+        $("#gridCompanyInApplication").kendoGrid({
+            columns: [
+                {
+                    headerTemplate: "<input id='chBxSelectAll' type='checkbox' />",
+                    template: "<input id='chBxSelectRow' class='gridCheckBox' type='checkbox' />",
+                    filterable: false, sortable: false, groupable: false, width: 28
+                },
+                { field: "CompanyObj.Code", title: "@ResourceStrings.Display_Name_CompanyInApplication_Code" },
+                { field: "CompanyObj.Description", title: "@ResourceStrings.Display_Name_CompanyInApplication_Description" },
+                { field: "Id", title: "@ResourceStrings.Display_Name_CompanyInApplication_Id", hidden: true }
+            ],
+            pageable: { input: false, numeric: true, refresh: true, pageSizes: [15, 20, 30, 40, 50] },
+            groupable: true,
+            sortable: { allowUnsort: false },
+            filterable: true,
+            resizable: true,
+            dataBound: onDataBound,
+            dataSource: {
+                serverPaging: true, serverFiltering: true, serverSorting: true, pageSize: '@ApplicationGlobals.GridMinRows',
+                page: getPage("gridCompanyInApplication"),
+                sort: getSort("gridCompanyInApplication") == null ? { field: "CompanyObj.Code", dir: "asc" } : getSort("gridCompanyInApplication"),
+                filter: getFilter("gridCompanyInApplication"),
+                schema: {
+                    data: "Data", total: "Total",
+                    model: {
+                        id: "Id",
+                        fields: {
+                            "Id": { type: "number" },
+                            "CompanyObj.Code": { type: "string" },
+                            "CompanyObj.Description": { type: "string" }
+                        }
+                    }
+                },
+                transport: {
+                    read: {
+                        url: "CompanyInApplication/CompanyInApplicationPage",
+                        contentType: "application/json; charset=utf-8",
+                        type: "POST",
+                        dataType: "json"
+                    },
+                    parameterMap: function (data) {
+                        return JSON.stringify(data);
+                    }
+                }
+            }
+        });
+
+        $("#gridCompanyInApplication").attr("hiddenSelectedRows", "#hidGridCheckedRowsCompanyInApplication");
+    });
+</script>
+
+@using (Html.BeginForm(string.Empty, "CompanyInApplication", FormMethod.Post))
+{
+    <div class="content">
+        <div id="error-display" class="error">
+            @ViewBag.ErrorMessage
+        </div>
+
+        @Html.GenerateBreadCrumbs("Application", ResourceStrings.Text_CompanyInApplication)
+        @Html.GenerateMasterDetail("Application")
+
+        <div class="padding-bottom-5">
+            @Html.Button(ResourceStrings.Text_Add, new { @class = "insert-button", @type = "button", @id = "imgBtAdd" }, AuthorizeUser.CanPerformAction(PageId.PAGE_COMPANYINAPPLICATION, DataOperation.CREATE))
+            @Html.Button(ResourceStrings.Text_Remove, new { @class = "delete-button", @type = "button", @id = "imgBtRemove" }, AuthorizeUser.CanPerformAction(PageId.PAGE_COMPANYINAPPLICATION, DataOperation.DELETE))
+
+            @Html.Button(ResourceStrings.Text_Users, new { @class = "users-button", @value = "Users", @name = "CompanyInApplicationForm", @id = "imgBtUsers" }, AuthorizeUser.CanPerformAction(PageId.PAGE_USERINCOMPANYINAPPLICATION, DataOperation.ACCESS))
+            @Html.Button(ResourceStrings.Text_Roles, new { @class = "role-button", @value = "Roles", @name = "CompanyInApplicationForm", @id = "imgBtRoles" }, AuthorizeUser.CanPerformAction(PageId.PAGE_SECURITYROLES, DataOperation.ACCESS))
+            @Html.Button(ResourceStrings.Text_Security_Items, new { @class = "security-button", @value = "Security Items", @name = "CompanyInApplicationForm", @id = "imgBtSecurityItems" }, AuthorizeUser.CanPerformAction(PageId.PAGE_SECURITYITEM, DataOperation.ACCESS))
+            @Html.Button(ResourceStrings.Text_Application_Settings, new { @class = "application-settings-button", @value = "Application Settings", @name = "CompanyInApplicationForm", @id = "imgBtApplicationSettings" }, AuthorizeUser.CanPerformAction(PageId.PAGE_APPLICATIONSETTINGS, DataOperation.ACCESS))
+        </div>
+
+        @(Html.Search("CompanyInApplicationSearch").Form("CompanyInApplicationForm").Grid("gridCompanyInApplication"))
+        <div id="gridCompanyInApplication"></div>
+    </div>
+
+    @Html.Hidden("hidGridCheckedRowsCompanyInApplication")
+}
+
+@if (AuthorizeUser.CanPerformAction(PageId.PAGE_COMPANYINAPPLICATION, DataOperation.CREATE))
+{
+    @(Html.SearchBox("imgBtAdd")
+        .Title(ResourceStrings.Text_Company)
+        .Sort("Code")
+        .Controller("CompanyInApplication")
+        .Action("AvailableCompanyPageForApplication")
+        .BindData("add")
+        .Columns(string.Format("Id:{0}:number:true:0,Code:{1}:string:false:36,Description:{2}:string:false:60",
+            ResourceStrings.Display_Name_Company_Id, ResourceStrings.Display_Name_Company_Code, ResourceStrings.Display_Name_Company_Description)))
+}
+
+<script>
+    function add(returnValues) {
+        if (returnValues !== "") {
+            $.ajax({
+                url: "CompanyInApplication/Insert",
+                data: { ids: returnValues.split(',') },
+                traditional: true,
+                type: "POST",
+                success: function (message) {
+                    $("#error-display").text(message);
+                    $("#gridCompanyInApplication").data().kendoGrid.dataSource.read();
+                }
+            });
+        }
+    }
+</script>
+
+@Scripts.Render("~/bundles/grid")

@@ -1,0 +1,365 @@
+﻿@{
+    ViewBag.Title = string.Format(ResourceStrings.Text_Identification, ResourceStrings.Text_UserAccount);
+}
+
+<script>
+    $(function () {
+        removeCookies("gridUserApplicationFavourites, gridUserDelegate");
+
+        $("#gridUserAccount").prop("selectedRows", $.cookie("SELECTED-gridUserAccount"));
+        $("#hidGridCheckedRowsUserAccount").val($.cookie("SELECTED-gridUserAccount"));
+
+        $("#gridUserAccount").kendoGrid({
+            columns: [
+                {
+                    headerTemplate: "<input id='chBxSelectAll' type='checkbox' />",
+                    template: "<input id='chBxSelectRow' class='gridCheckBox' type='checkbox' />",
+                    filterable: false, sortable: false, groupable: false, width: 28
+                },
+                { field: "Id", title: "@ResourceStrings.Display_Name_UserAccountDetails_Id", hidden: true },
+                { field: "Code", title: "@ResourceStrings.Display_Name_UserAccountDetails_Code" },
+                { field: "UserName", title: "@ResourceStrings.Display_Name_UserAccountDetails_UserName" },
+                { field: "FullName", title: "@ResourceStrings.Display_Name_UserAccountDetails_FullName" },
+                { field: "Domain", title: "@ResourceStrings.Display_Name_UserAccountDetails_Domain" },
+                { field: "eMail", title: "@ResourceStrings.Display_Name_UserAccountDetails_eMail" },
+                { field: "UserAccountType", title: "@ResourceStrings.Display_Name_UserAccountDetails_UserAccountType" },
+                { field: "Company", title: "@ResourceStrings.Display_Name_UserAccountDetails_Company" },
+                { field: "IsRecordDeleted", title: "@ResourceStrings.Display_Name_UserAccountDetails_IsRecordDeleted", template: '<input disabled="disabled" type="checkbox" #=IsRecordDeleted?"checked=checked":""# />' }
+            ],
+            pageable: { input: false, numeric: true, refresh: true, pageSizes: [15, 20, 30, 40, 50] },
+            groupable: true,
+            sortable: { allowUnsort: false },
+            filterable: true,
+            resizable: true,
+            dataBound: onDataBound,
+            dataSource: {
+                serverPaging: true, serverFiltering: true, serverSorting: true, pageSize: '@ApplicationGlobals.GridMinRows',
+                page: getPage("gridUserAccount"),
+                sort: getSort("gridUserAccount") == null ? { field: "UserName", dir: "asc" } : getSort("gridUserAccount"),
+                filter: getFilter("gridUserAccount"),
+                schema: {
+                    data: "Data", total: "Total",
+                    model: {
+                        id: "Id",
+                        fields: {
+                            "Domain": { type: "string" },
+                            "Id": { type: "number" },
+                            "IsRecordDeleted": { type: "boolean" },
+                            "UserName": { type: "string" },
+                            "FullName": { type: "string" },
+                            "eMail": { type: "string" },
+                            "UserAccountType": { type: "string" },
+                            "Company": { type: "string" },
+                            "Code": { type: "string" }
+                        }
+                    }
+                },
+                transport: {
+                    read: {
+                        url: "UserAccount/UserAccountPage",
+                        contentType: "application/json; charset=utf-8",
+                        type: "POST",
+                        dataType: "json"
+                    },
+                    parameterMap: function (data) {
+                        return JSON.stringify(data);
+                    }
+                }
+            }
+        });
+
+        $("#gridUserAccount").attr("hiddenSelectedRows", "#hidGridCheckedRowsUserAccount");
+    });
+</script>
+
+@using (Html.BeginForm(string.Empty, "UserAccount", FormMethod.Post))
+{
+    <div class="content">
+        <div id="error-display" class="error">
+            @ViewBag.ErrorMessage
+        </div>
+
+        <div class="padding-bottom-5">
+            @Html.Button(ResourceStrings.Text_New, new { @class = "insert-button", @type = "button", @id = "imgBtNew" }, AuthorizeUser.CanPerformAction(PageId.PAGE_USERACCOUNT, DataOperation.CREATE))
+            @Html.Button(ResourceStrings.Text_Edit_View, new { @class = "edit-button", @type = "button", @id = "imgBtSingleEdit" }, AuthorizeUser.CanPerformAction(PageId.PAGE_USERACCOUNT, DataOperation.READ) || AuthorizeUser.CanPerformAction(PageId.PAGE_USERACCOUNT, DataOperation.UPDATE))
+            @Html.Button(ResourceStrings.Text_Copy, new { @class = "copy-button", @type = "button", @id = "imgBtCopy" }, AuthorizeUser.CanPerformAction(PageId.PAGE_USERACCOUNT, DataOperation.CREATE))
+            @Html.Button(ResourceStrings.Text_Delete, new { @class = "delete-button", @type = "button", @id = "imgBtSingleDelete" }, AuthorizeUser.CanPerformAction(PageId.PAGE_USERACCOUNT, DataOperation.DELETE))
+
+            @Html.Button(ResourceStrings.Text_Delegate, new { @class = "delegate-button", @value = "Delegate", @name = "UserAccountForm", @id = "imgBtDelegate" }, AuthorizeUser.CanPerformAction(PageId.PAGE_USERDELEGATE, DataOperation.ACCESS))
+            @Html.Button(ResourceStrings.Text_Application_Favourites, new { @class = "application-favourites-button", @value = "Application Favourites", @name = "UserAccountForm", @id = "imgBtApplicationFavourites" }, AuthorizeUser.CanPerformAction(PageId.PAGE_USERAPPLICATIONFAVOURITES, DataOperation.ACCESS))
+            @Html.Button(ResourceStrings.Text_UserApplicationSettings, new { @class = "user-application-settings-button", @type = "button", @id = "imgBtUserApplicationSettings" }, AuthorizeUser.CanPerformAction(PageId.PAGE_USERAPPLICATIONSETTINGS, DataOperation.UPDATE))
+            @*@Html.Button(ResourceStrings.Text_UserAttribute, new { @class = "user-attribute-button", @type = "button", @id = "imgBtUserAttribute" }, AuthorizeUser.CanPerformAction(PageId.PAGE_USERATTRIBUTE, DataOperation.UPDATE))*@
+            @Html.Button(ResourceStrings.Text_UserAttribute, new { @class = "user-attribute-button", @type = "button", @id = "imgBtUserAttribute" })
+        </div>
+
+        @(Html.Search("UserAccountSearch").Form("UserAccountForm").Grid("gridUserAccount"))
+        <div id="gridUserAccount"></div>
+    </div>
+
+    @Html.Hidden("hidGridCheckedRowsUserAccount")
+}
+
+@if (AuthorizeUser.CanPerformAction(PageId.PAGE_USERACCOUNT, DataOperation.CREATE) || AuthorizeUser.CanPerformAction(PageId.PAGE_USERACCOUNT, DataOperation.UPDATE))
+{
+    @(Html.SearchBox("imgBtEmployeeNumber")
+                .MultiSelect(false)
+                .Title(ResourceStrings.Text_Employee)
+                .Sort("EmpNo")
+                .Controller("UserAccount")
+                .Action("AvailableEmployeesPage")
+                .BindData("bindEmployee")
+                .Columns(string.Format("Id:{0}:number:true:0,EmpNo:{1}:string:false:20,FullName:{2}:string:false:25,eMail:{3}:string:false:30,Company:{4}:string:false:21",
+                    ResourceStrings.Display_Name_RO_Employee_Id, ResourceStrings.Display_Name_RO_Employee_EmpNo, ResourceStrings.Display_Name_RO_Employee_Name,
+                    ResourceStrings.Display_Name_RO_Employee_EMailAddress, ResourceStrings.Display_Name_RO_Employee_Company)))
+
+    @(Html.SearchBox("imgBtCompany")
+                .MultiSelect(false)
+                .Title(ResourceStrings.Text_Company)
+                .Sort("Code")
+                .Controller("UserAccount")
+                .Action("AvailableCompanyPage")
+                .BindData("bindCompany")
+                .Columns(string.Format("Id:{0}:number:true:0,Code:{1}:string:false:36,Description:{2}:string:false:60",
+                    ResourceStrings.Display_Name_Company_Id, ResourceStrings.Display_Name_Company_Code, ResourceStrings.Display_Name_Company_Description)))
+
+    @(Html.SearchBox("imgBtPersonCode")
+                .MultiSelect(false)
+                .Title(ResourceStrings.Text_Person)
+                .Sort("PersonCode")
+                .Controller("UserAccount")
+                .Action("AvailableExternalPersonsPage")
+                .BindData("bindExternalPerson")
+                .Columns(string.Format("Id:{0}:number:true:0,PersonCode:{1}:string:false:20,FullName:{2}:string:false:36,eMail:{3}:string:false:40",
+                    ResourceStrings.Display_Name_ExternalPerson_Id, ResourceStrings.Display_Name_ExternalPerson_PersonCode,
+                    ResourceStrings.Display_Name_ExternalPerson_FullName, ResourceStrings.Display_Name_ExternalPerson_eMail)))
+}
+
+@if (AuthorizeUser.CanPerformAction(PageId.PAGE_USERAPPLICATIONSETTINGS, DataOperation.UPDATE))
+{
+    @(Html.SearchBox("imgBtProject")
+                .ReturnValue("ProjectNumber")
+                .MultiSelect(false)
+                .Title(ResourceStrings.Text_Projects)
+                .Sort("ProjectNumber")
+                .Id("ProjectNumber")
+                .Controller("UserAccount")
+                .Action("ProjectsPage")
+                .ControlId("txBxProject")
+                .Columns(string.Format("ProjectNumber:{0}:string:false:36,Description:{1}:string:false:60",
+                    ResourceStrings.Display_Name_Projects_ProjectNumber, ResourceStrings.Display_Name_Projects_Description)))
+}
+
+@if (AuthorizeUser.CanPerformAction(PageId.PAGE_USERATTRIBUTE, DataOperation.UPDATE))
+{
+    @(Html.SearchBox("imgBtProject")
+                .ReturnValue("ProjectNumber")
+                .MultiSelect(false)
+                .Title(ResourceStrings.Text_Projects)
+                .Sort("ProjectNumber")
+                .Id("ProjectNumber")
+                .Controller("UserAccount")
+                .Action("ProjectsPage")
+                .ControlId("txBxProject")
+                .Columns(string.Format("ProjectNumber:{0}:string:false:36,Description:{1}:string:false:60",
+                    ResourceStrings.Display_Name_Projects_ProjectNumber, ResourceStrings.Display_Name_Projects_Description)))
+}
+
+<script>
+    $(function () {
+        $(document).on("change", "#dpdUserAccountType", function (e) {
+            var userAccountTypeId = this.selectedIndex + 1;
+
+            $.ajax({
+                url: "UserAccount/BindData",
+                data: { selectedId: -1, dataOperation: 1, userAccountType: userAccountTypeId },
+                type: "POST",
+                success: function (data) {
+                    $("#window").html(data);
+
+                    var $form = $("#window form");
+                    $.validator.unobtrusive.parse($form);
+                }
+            });
+        });
+
+        $("#imgBtSingleEdit").click(function (e) {
+            return isRecordNotDeleted("Edit", e);
+        });
+
+        $("#imgBtCopy").click(function (e) {
+            return isRecordNotDeleted("Copy", e);
+        });
+
+        $("#imgBtDelegate").click(function (e) {
+            return isRecordNotDeleted("Assign Delegate", e);
+        });
+
+        $("#imgBtApplicationFavourites").click(function (e) {
+            return isRecordNotDeleted("Assign Application Favourites", e);
+        });
+    });
+
+    function isRecordNotDeleted(action, e) {
+        var returnValue = validateSelectedRows(action, false, e);
+
+        if (returnValue) {
+            $.ajax({
+                url: "UserAccount/IsRecordDeleted",
+                data: { id: $("#hidGridCheckedRowsUserAccount").val() },
+                type: "POST",
+                async: false,
+                success: function (result) {
+                    returnValue = !result;
+                    $("#error-display").html(result ? '@ResourceStrings.Error_Message_Record_Deleted' : "");
+                }
+            });
+        }
+
+        return returnValue;
+    }
+
+    var popup = null;
+    $(document).on("click", "#imgBtUserApplicationSettings", function (e) {
+        if (isRecordNotDeleted("Assign User Application Settings", e)) {
+            popup = initialiseUserApplicationSettingsWindow();
+
+            $.post("UserAccount/BindUserApplicationSettings", { id: $("#hidGridCheckedRowsUserAccount").val() }, function (data) {
+                $("#window").html(data);
+
+                var form = $("#window form");
+
+                form.unbind();
+                form.data("validator", null);
+                $.validator.unobtrusive.parse(document);
+
+                $(".k-window-title").text($("#title").val());
+            });
+        }
+    });
+
+    function initialiseUserApplicationSettingsWindow() {
+        var popup = $("#window").kendoWindow({
+            modal: true,
+            width: 950,
+            open: function () {
+                this.wrapper.css({ top: 10 });
+            },
+            close: function () {
+                location = location.href;
+            }
+        }).data().kendoWindow.center().open();
+
+        return popup;
+    }
+
+
+    var popup = null;
+    $(document).on("click", "#imgBtUserAttribute", function (e) {
+        if (validateSelectedRows("Get User Attributes", false, e)) {
+            popup = initialiseUserAttributeWindow();
+
+            $.post("UserAccount/BindUserAttribute", { id: $("#hidGridCheckedRowsUserAccount").val() }, function (data) {
+                $("#window").html(data);
+
+                var form = $("#window form");
+
+                form.unbind();
+                form.data("validator", null);
+                $.validator.unobtrusive.parse(document);
+
+                $(".k-window-title").text($("#title").val());
+            });
+        }
+    });
+
+    function initialiseUserAttributeWindow() {
+        var popup = $("#window").kendoWindow({
+            modal: true,
+            width: 950,
+            open: function () {
+                this.wrapper.css({ top: 10 });
+            },
+            close: function () {
+                location = location.href;
+            }
+        }).data().kendoWindow.center().open();
+
+        return popup;
+    }
+
+
+    $(document).on("click", "#imgBtSaveUserApplicationSettings", function () {
+        var form = $("#window form");
+
+        form.validate().resetForm();
+        $.validator.unobtrusive.parse(form);
+
+        if (form.valid()) {
+            $.ajax({
+                url: "UserAccount/SaveUserApplicationSettings",
+                data: new FormData(form[0]),
+                processData: false,
+                contentType: false,
+                type: "POST",
+                success: function (data) {
+                    $("#window #error-display, #error-display").html(data);
+                    popup.close();
+                }
+            });
+        }
+    });
+
+    function bindEmployee(returnValues) {
+        if (returnValues != "") {
+            $.ajax({
+                url: "UserAccount/GetEmployeeData",
+                data: { id: returnValues },
+                type: "POST",
+                async: false,
+                success: function (data) {
+                    $("#hidLnEmployeeId").val(returnValues);
+
+                    $("#txBxEmployeeNumber").val(data.EmpNo);
+                    $("#txBxFullName").val(data.FullName);
+                    $("#txBxUserName").val(data.UserName);
+                }
+            });
+        }
+    }
+
+    function bindCompany(returnValues) {
+        if (returnValues != "") {
+            $.ajax({
+                url: "UserAccount/GetCompanyDescription",
+                data: { id: returnValues },
+                type: "POST",
+                async: false,
+                success: function (data) {
+                    $("#hidLnDefaultCompanyId").val(returnValues);
+                    $("#txBxCompany").val(data);
+                }
+            });
+        }
+    }
+
+    function bindExternalPerson(returnValues) {
+        if (returnValues != "") {
+            $.ajax({
+                url: "UserAccount/GetExternalPersonData",
+                data: { id: returnValues },
+                type: "POST",
+                async: false,
+                success: function (data) {
+                    $("#hidLnExternalPersonId").val(returnValues);
+
+                    $("#txBxPersonCode").val(data.PersonCode);
+                    $("#txBxFullName").val(data.FullName);
+                    $("#txBxUserName").val(data.UserName);
+                }
+            });
+        }
+    }
+</script>
+
+<div id="window"></div>
+@Scripts.Render("~/bundles/popup", "~/bundles/grid")

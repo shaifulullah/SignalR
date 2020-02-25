@@ -1,0 +1,151 @@
+﻿<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title</title>
+
+    @Scripts.Render("~/bundles/jquery", "~/bundles/js")
+    @Styles.Render("~/content/css")
+
+    <script src="@Url.Content(string.Format("~/Scripts/kendo/cultures/kendo.culture.{0}.min.js" , ApplicationGlobals.CultureInfo))"></script>
+    <script src="@Url.Content(string.Format("~/Scripts/kendo/cultures/kendo.{0}.js" , ApplicationGlobals.CultureInfo))"></script>
+
+    <style>
+        th {
+            text-align: left;
+            color: blue;
+        }
+
+        .caret {
+            display: inline-block;
+            width: 0;
+            height: 0;
+            margin-left: 2px;
+            vertical-align: middle;
+            border-top: 4px dashed;
+            border-top: 4px solid\9;
+            border-right: 4px solid transparent;
+            border-left: 4px solid transparent;
+        }
+
+        .button {
+            background-color: #fff;
+        }
+
+        .dropdown {
+            position: relative;
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            z-index: 1000;
+            display: none;
+            float: left;
+            min-width: 160px;
+            padding: 5px 0;
+            margin: 2px 0 0;
+            font-size: 14px;
+            text-align: left;
+            list-style: none;
+            background-color: #fff;
+            -webkit-background-clip: padding-box;
+            background-clip: padding-box;
+            border: 1px solid #ccc;
+            border: 1px solid rgba(0,0,0,.15);
+            border-radius: 4px;
+            -webkit-box-shadow: 0 6px 12px rgba(0,0,0,.175);
+            box-shadow: 0 6px 12px rgba(0,0,0,.175);
+        }
+
+            .dropdown-menu > li > a {
+                display: block;
+                padding: 3px 20px;
+                clear: both;
+                font-weight: 400;
+                line-height: 1.42857143;
+                color: #333;
+                white-space: nowrap;
+            }
+
+                .dropdown-menu > li > a:focus, .dropdown-menu > li > a:hover {
+                    color: #262626;
+                    text-decoration: none;
+                    background-color: #daecf4;
+                }
+
+        .open > .dropdown-menu {
+            display: block;
+        }
+
+        .button {
+            border: none;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-background">
+            <div class="header-logo">
+                <img src="~/Images/MDA_Colour_Logo.png" />
+            </div>
+            <div class="header-application">
+                <h2>@Html.Label(ApplicationGlobals.ApplicationName)</h2>
+            </div>
+
+            @if (ApplicationGlobals.UserId != 0)
+            {
+                <div class="dropdown" style="float: right; padding-right: 10px; padding-top: 10px">
+                    <button class="button" data-toggle="dropdown" style="padding: 3px">
+                        @string.Format("{0} ({1})", ApplicationGlobals.UserName, ApplicationGlobals.DefaultCompany)
+                        <span class="caret"></span>
+                    </button>
+                    @Html.Action("UserMenuItemsList", "UserMenuItems")
+                </div>
+            }
+        </div>
+    </header>
+
+    @if (ApplicationGlobals.CanDisplayTreeMenuVertical)
+    {
+        <div class="header-location">
+            <div>@ViewBag.Title</div>
+        </div>
+        <div id="navigation" class="content-navigation">
+            <div id="treeView" class="navigation">
+                @(ApplicationGlobals.UserId == 0 ? MvcHtmlString.Empty : @Html.Action("TreeMenuList", "TreeMenu"))
+            </div>
+        </div>
+
+        <div id="content" class="content-detail">
+            @RenderBody()
+        </div>
+    }
+    else
+    {
+        <div id="content">
+            <div id="treeView">
+                @(ApplicationGlobals.UserId == 0 ? MvcHtmlString.Empty : @Html.Action("TreeMenuList", "TreeMenu"))
+            </div>
+            <div class="header-location">
+                <div>@ViewBag.Title</div>
+            </div>
+            @RenderBody()
+        </div>
+    }
+</body>
+</html>
+
+<script>
+    kendo.culture("@ApplicationGlobals.CultureInfo");
+    kendo.culture().calendar.patterns.d = '@ApplicationGlobals.ShortDatePattern';
+
+    document.body.onmousedown = function () {
+        $("#error-display").html("");
+    }
+</script>
+
+@Scripts.Render("~/bundles/bootstrap", "~/bundles/modernizr", "~/bundles/jqueryval", "~/bundles/jquerycookie")

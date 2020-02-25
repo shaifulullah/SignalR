@@ -1,0 +1,72 @@
+﻿@model BusinessEntityAccessByRoleViewModel
+
+@using (Html.BeginForm(string.Empty, "BusinessEntityAccessByRole", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    <div class="content">
+        <div id="error-display" class="popup-error">
+            @ViewBag.ErrorMessage
+        </div>
+
+        <div class="padding-bottom-5">
+            @Html.Button(ResourceStrings.Text_Save, new { @class = "save-button", @type = "button", @id = "imgBtSave" },
+                Model.DataAction != DataOperation.EDIT_VIEW || AuthorizeUser.CanPerformAction(PageId.PAGE_BUSINESSENTITYACCESSBYROLE, DataOperation.UPDATE))
+        </div>
+
+        <fieldset class="form-layout">
+            <legend></legend>
+
+            @Html.Hidden("title", string.Format("{0} [{1}]", ApplicationGlobals.GetActionText(Model.DataAction), ResourceStrings.Text_BusinessEntityAccessByRole))
+
+            @Html.HiddenFor(model => model.DataAction)
+            @Html.HiddenFor(model => model.LnSecurityBusinessEntitiesId)
+            @Html.HiddenFor(model => model.LnSecurityRolesId, new { @id = "hidLnSecurityRolesId" })
+
+            <table class="form-table">
+                <tr>
+                    <td class="form-label">@Html.LabelFor(model => model.SecurityRolesCode)<b class="form-required">&#42;</b></td>
+                    <td>
+                        <span class="search-box">
+                            <nobr>
+                                @Html.TextBoxFor(model => model.SecurityRolesCode, new { @id = "txBxSecurityRolesCode", @readonly = "readonly" })
+                                <input type="button" id="imgBtSecurityRolesCode" />
+                            </nobr>
+                        </span>
+                    </td>
+                    <td class="form-error">@Html.ValidationMessageFor(model => model.SecurityRolesCode)</td>
+                </tr>
+                <tr>
+                    <td class="form-label">@Html.LabelFor(model => model.SecurityRolesDescription)</td>
+                    <td>@Html.TextBoxFor(model => model.SecurityRolesDescription, new { @id = "txBxSecurityRolesDescription", @readonly = "readonly" })</td>
+                    <td class="form-error">@Html.ValidationMessageFor(model => model.SecurityRolesDescription)</td>
+                </tr>
+                <tr>
+                    <td class="form-label">@Html.LabelFor(model => model.Application)</td>
+                    <td>@Html.TextBoxFor(model => model.Application, new { @id = "txBxApplication", @readonly = "readonly" })</td>
+                    <td class="form-error">@Html.ValidationMessageFor(model => model.Application)</td>
+                </tr>
+                <tr>
+                    <td class="form-label">@Html.LabelFor(model => model.Company)</td>
+                    <td>@Html.TextBoxFor(model => model.Company, new { @id = "txBxCompany", @readonly = "readonly" })</td>
+                    <td class="form-error">@Html.ValidationMessageFor(model => model.Company)</td>
+                </tr>
+                <tr>
+                    <td class="form-label">@Html.LabelFor(model => model.Value)<b class="form-required">&#42;</b></td>
+                    <td>@Html.TextBoxFor(model => model.Value, new { @id = "txBxValue" })</td>
+                    <td class="form-error">@Html.ValidationMessageFor(model => model.Value)</td>
+                </tr>
+            </table>
+        </fieldset>
+
+        @if (Model.DataAction == DataOperation.EDIT_VIEW)
+        {
+            @Html.HiddenFor(model => model.Id, new { id = "hidId" })
+
+            <div class="padding-top-5" style="float: right">
+                @Html.Button(ResourceStrings.Text_Previous, new { @class = "previous-button", @type = "button", id = "imgBtPrevious" })
+                @Html.Label(ResourceStrings.Text_First_Record, new { id = "lblCurrentRecord" })
+                @Html.Button(ResourceStrings.Text_Next, new { @class = "next-button", @type = "button", id = "imgBtNext" })
+            </div>
+        }
+    </div>
+}

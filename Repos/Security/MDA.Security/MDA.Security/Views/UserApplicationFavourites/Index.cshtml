@@ -1,0 +1,110 @@
+﻿@{
+    ViewBag.Title = string.Format(ResourceStrings.Text_Identification, ResourceStrings.Text_UserApplicationFavourites);
+}
+
+<script>
+    $(function () {
+        $("#gridUserApplicationFavourites").kendoGrid({
+            columns: [
+                {
+                    headerTemplate: "<input id='chBxSelectAll' type='checkbox' />",
+                    template: "<input id='chBxSelectRow' class='gridCheckBox' type='checkbox' />",
+                    filterable: false, sortable: false, groupable: false, width: 28
+                },
+                { field: "Id", title: "@ResourceStrings.Display_Name_UserApplicationFavourites_Id", hidden: true },
+                { field: "ApplicationObj.Code", title: "@ResourceStrings.Display_Name_UserApplicationFavourites_ApplicationCode" },
+                { field: "ApplicationObj.Description", title: "@ResourceStrings.Display_Name_UserApplicationFavourites_ApplicationDescription" }
+            ],
+            pageable: { input: false, numeric: true, refresh: true, pageSizes: [15, 20, 30, 40, 50] },
+            groupable: true,
+            sortable: { allowUnsort: false },
+            filterable: true,
+            resizable: true,
+            dataBound: onDataBound,
+            dataSource: {
+                serverPaging: true, serverFiltering: true, serverSorting: true, pageSize: '@ApplicationGlobals.GridMinRows',
+                page: getPage("gridUserApplicationFavourites"),
+                sort: getSort("gridUserApplicationFavourites") == null ? { field: "ApplicationObj.Code", dir: "asc" } : getSort("gridUserApplicationFavourites"),
+                filter: getFilter("gridUserApplicationFavourites"),
+                schema: {
+                    data: "Data", total: "Total",
+                    model: {
+                        id: "Id",
+                        fields: {
+                            "Id": { type: "number" },
+                            "ApplicationObj.Code": { type: "string" },
+                            "ApplicationObj.Description": { type: "string" }
+                        }
+                    }
+                },
+                transport: {
+                    read: {
+                        url: "UserApplicationFavourites/UserApplicationFavouritesPage",
+                        contentType: "application/json; charset=utf-8",
+                        type: "POST",
+                        dataType: "json"
+                    },
+                    parameterMap: function (data) {
+                        return JSON.stringify(data);
+                    }
+                }
+            }
+        });
+
+        $("#gridUserApplicationFavourites").attr("hiddenSelectedRows", "#hidGridCheckedRowsUserApplicationFavourites");
+    });
+</script>
+
+@using (Html.BeginForm(string.Empty, "UserApplicationFavourites", FormMethod.Post))
+{
+    <div class="content">
+        <div id="error-display" class="error">
+            @ViewBag.ErrorMessage
+        </div>
+
+        @Html.GenerateBreadCrumbs("UserAccount", ResourceStrings.Text_UserApplicationFavourites)
+        @Html.GenerateMasterDetail("UserAccount")
+
+        <div class="padding-bottom-5">
+            @Html.Button(ResourceStrings.Text_Add, new { @class = "insert-button", @type = "button", @id = "imgBtAdd" }, AuthorizeUser.CanPerformAction(PageId.PAGE_USERAPPLICATIONFAVOURITES, DataOperation.CREATE))
+            @Html.Button(ResourceStrings.Text_Remove, new { @class = "delete-button", @type = "button", @id = "imgBtRemove" }, AuthorizeUser.CanPerformAction(PageId.PAGE_USERAPPLICATIONFAVOURITES, DataOperation.DELETE))
+        </div>
+
+        @(Html.Search("UserApplicationFavouritesSearch").Form("UserApplicationFavouritesForm").Grid("gridUserApplicationFavourites"))
+        <div id="gridUserApplicationFavourites"></div>
+    </div>
+
+    @Html.Hidden("hidGridCheckedRowsUserApplicationFavourites")
+}
+
+@if (AuthorizeUser.CanPerformAction(PageId.PAGE_USERAPPLICATIONFAVOURITES, DataOperation.CREATE))
+{
+    @(Html.SearchBox("imgBtAdd")
+        .MultiSelect(true)
+        .Title(ResourceStrings.Text_Application)
+        .Sort("Code")
+        .Controller("UserApplicationFavourites")
+        .Action("AvailableApplicationPageForUserAccount")
+        .BindData("add")
+        .Columns(string.Format("Id:{0}:number:true:0,Code:{1}:string:false:36,Description:{2}:string:false:60",
+            ResourceStrings.Display_Name_Application_Id, ResourceStrings.Display_Name_Application_Code, ResourceStrings.Display_Name_Application_Description)))
+}
+
+<script>
+    function add(returnValues) {
+        if (returnValues != "") {
+            $.ajax({
+                url: "UserApplicationFavourites/Insert",
+                data: { ids: returnValues.split(',') },
+                traditional: true,
+                type: "POST",
+                success: function (message) {
+                    $("#error-display").text(message);
+                    $("#gridUserApplicationFavourites").data().kendoGrid.dataSource.read();
+                }
+            });
+        }
+    }
+</script>
+
+@Scripts.Render("~/bundles/grid")

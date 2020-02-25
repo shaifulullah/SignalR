@@ -1,0 +1,35 @@
+﻿@model SecurityReportViewModel
+@{
+    ViewBag.Title = ResourceStrings.Text_Security_Report;
+}
+
+@using (Html.BeginForm(string.Empty, "SecurityReport", FormMethod.Post))
+{
+    <div class="content">
+        <div id="error-display" class="error">
+            @ViewBag.ErrorMessage
+        </div>
+
+        <div class="padding-bottom-5">
+            @Html.Button(ResourceStrings.Text_Export_To_Xls, new { @class = "xls-button", @value = "Export to XLS", @name = "SecurityReportForm" }, AuthorizeUser.CanPerformAction(PageId.PAGE_SECURITYREPORT, DataOperation.EXECUTE))
+            @Html.Button(ResourceStrings.Text_Export_To_Pdf, new { @class = "pdf-button", @value = "Export to PDF", @name = "SecurityReportForm" }, AuthorizeUser.CanPerformAction(PageId.PAGE_SECURITYREPORT, DataOperation.EXECUTE))
+        </div>
+
+        <fieldset class="form-layout">
+            <legend></legend>
+
+            <table class="form-table">
+                <tr>
+                    <td class="form-label">@Html.LabelFor(model => model.LnApplicationId)<b class="form-required">&#42;</b></td>
+                    <td>@Html.DropDownListFor(model => model.LnApplicationId, Model.ApplicationList, string.Format(ResourceStrings.Text_Select, ResourceStrings.Text_Application), new { @style = "width:305px" })</td>
+                    <td class="form-error">@Html.ValidationMessageFor(model => model.LnApplicationId)</td>
+                </tr>
+                <tr>
+                    <td class="form-label">@Html.LabelFor(model => model.LnCompanyId)<b class="form-required">&#42;</b></td>
+                    <td>@Html.DropDownListFor(model => model.LnCompanyId, Model.CompanyList, string.Format(ResourceStrings.Text_Select, ResourceStrings.Text_Company), new { @style = "width:305px" })</td>
+                    <td class="form-error">@Html.ValidationMessageFor(model => model.LnCompanyId)</td>
+                </tr>
+            </table>
+        </fieldset>
+    </div>
+}

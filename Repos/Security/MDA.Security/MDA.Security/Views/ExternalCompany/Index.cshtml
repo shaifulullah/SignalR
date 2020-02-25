@@ -1,0 +1,87 @@
+﻿@{
+    ViewBag.Title = string.Format(ResourceStrings.Text_Identification, ResourceStrings.Text_ExternalCompany);
+}
+
+<script>
+    $(function () {
+        removeCookies("gridExternalPerson");
+
+        $("#gridExternalCompany").prop("selectedRows", $.cookie("SELECTED-gridExternalCompany"));
+        $("#hidGridCheckedRowsExternalCompany").val($.cookie("SELECTED-gridExternalCompany"));
+
+        $("#gridExternalCompany").kendoGrid({
+            columns: [
+                {
+                    headerTemplate: "<input id='chBxSelectAll' type='checkbox' />",
+                    template: "<input id='chBxSelectRow' class='gridCheckBox' type='checkbox' />",
+                    filterable: false, sortable: false, groupable: false, width: 28
+                },
+                { field: "Code", title: "@ResourceStrings.Display_Name_ExternalCompany_Code" },
+                { field: "Description", title: "@ResourceStrings.Display_Name_ExternalCompany_Description" },
+                { field: "Id", title: "@ResourceStrings.Display_Name_ExternalCompany_Id", hidden: true }
+            ],
+            pageable: { input: false, numeric: true, refresh: true, pageSizes: [15, 20, 30, 40, 50] },
+            groupable: true,
+            sortable: { allowUnsort: false },
+            filterable: true,
+            resizable: true,
+            dataBound: onDataBound,
+            dataSource: {
+                serverPaging: true, serverFiltering: true, serverSorting: true, pageSize: '@ApplicationGlobals.GridMinRows',
+                page: getPage("gridExternalCompany"),
+                sort: getSort("gridExternalCompany") == null ? { field: "Code", dir: "asc" } : getSort("gridExternalCompany"),
+                filter: getFilter("gridExternalCompany"),
+                schema: {
+                    data: "Data", total: "Total",
+                    model: {
+                        id: "Id",
+                        fields: {
+                            "Code": { type: "string" },
+                            "Description": { type: "string" },
+                            "Id": { type: "number" }
+                        }
+                    }
+                },
+                transport: {
+                    read: {
+                        url: "ExternalCompany/ExternalCompanyPage",
+                        contentType: "application/json; charset=utf-8",
+                        type: "POST",
+                        dataType: "json"
+                    },
+                    parameterMap: function (data) {
+                        return JSON.stringify(data);
+                    }
+                }
+            }
+        });
+
+        $("#gridExternalCompany").attr("hiddenSelectedRows", "#hidGridCheckedRowsExternalCompany");
+    });
+</script>
+
+@using (Html.BeginForm(string.Empty, "ExternalCompany", FormMethod.Post))
+{
+    <div class="content">
+        <div id="error-display" class="error">
+            @ViewBag.ErrorMessage
+        </div>
+
+        <div class="padding-bottom-5">
+            @Html.Button(ResourceStrings.Text_New, new { @class = "insert-button", @type = "button", @id = "imgBtNew" }, AuthorizeUser.CanPerformAction(PageId.PAGE_EXTERNALCOMPANY, DataOperation.CREATE))
+            @Html.Button(ResourceStrings.Text_Edit_View, new { @class = "edit-button", @type = "button", @id = "imgBtEdit" }, AuthorizeUser.CanPerformAction(PageId.PAGE_EXTERNALCOMPANY, DataOperation.READ) || AuthorizeUser.CanPerformAction(PageId.PAGE_EXTERNALCOMPANY, DataOperation.UPDATE))
+            @Html.Button(ResourceStrings.Text_Copy, new { @class = "copy-button", @type = "button", @id = "imgBtCopy" }, AuthorizeUser.CanPerformAction(PageId.PAGE_EXTERNALCOMPANY, DataOperation.CREATE))
+            @Html.Button(ResourceStrings.Text_Delete, new { @class = "delete-button", @type = "button", @id = "imgBtDelete" }, AuthorizeUser.CanPerformAction(PageId.PAGE_EXTERNALCOMPANY, DataOperation.DELETE))
+
+            @Html.Button(ResourceStrings.Text_Persons, new { @class = "persons-button", @value = "Persons", @name = "ExternalCompanyForm", @id = "imgBtPersons" }, AuthorizeUser.CanPerformAction(PageId.PAGE_EXTERNALPERSON, DataOperation.ACCESS))
+        </div>
+
+        @(Html.Search("ExternalCompanySearch").Form("ExternalCompanyForm").Grid("gridExternalCompany"))
+        <div id="gridExternalCompany"></div>
+    </div>
+
+    @Html.Hidden("hidGridCheckedRowsExternalCompany")
+}
+
+<div id="window"></div>
+@Scripts.Render("~/bundles/popup", "~/bundles/grid")

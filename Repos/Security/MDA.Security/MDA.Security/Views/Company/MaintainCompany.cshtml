@@ -1,0 +1,47 @@
+﻿@model CompanyViewModel
+
+@using (Html.BeginForm(string.Empty, "Company", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    <div class="content">
+        <div id="error-display" class="popup-error">
+            @ViewBag.ErrorMessage
+        </div>
+
+        <div class="padding-bottom-5">
+            @Html.Button(ResourceStrings.Text_Save, new { @class = "save-button", @type = "button", @id = "imgBtSave" },
+                Model.DataAction != DataOperation.EDIT_VIEW || AuthorizeUser.CanPerformAction(PageId.PAGE_COMPANY, DataOperation.UPDATE))
+        </div>
+
+        <fieldset class="form-layout">
+            <legend></legend>
+
+            @Html.Hidden("title", string.Format("{0} [{1}]", ApplicationGlobals.GetActionText(Model.DataAction), ResourceStrings.Text_Company))
+            @Html.HiddenFor(model => model.DataAction)
+
+            <table class="form-table">
+                <tr>
+                    <td class="form-label">@Html.LabelFor(model => model.Code)<b class="form-required">&#42;</b></td>
+                    <td>@Html.EditorFor(model => model.Code)</td>
+                    <td class="form-error">@Html.ValidationMessageFor(model => model.Code)</td>
+                </tr>
+                <tr>
+                    <td class="form-label">@Html.LabelFor(model => model.Description)<b class="form-required">&#42;</b></td>
+                    <td>@Html.EditorFor(model => model.Description)</td>
+                    <td class="form-error">@Html.ValidationMessageFor(model => model.Description)</td>
+                </tr>
+            </table>
+        </fieldset>
+
+        @if (Model.DataAction == DataOperation.EDIT_VIEW)
+        {
+            @Html.HiddenFor(model => model.Id, new { id = "hidId" })
+
+            <div class="padding-top-5" style="float: right">
+                @Html.Button(ResourceStrings.Text_Previous, new { @class = "previous-button", @type = "button", id = "imgBtPrevious" })
+                @Html.Label(ResourceStrings.Text_First_Record, new { id = "lblCurrentRecord" })
+                @Html.Button(ResourceStrings.Text_Next, new { @class = "next-button", @type = "button", id = "imgBtNext" })
+            </div>
+        }
+    </div>
+}

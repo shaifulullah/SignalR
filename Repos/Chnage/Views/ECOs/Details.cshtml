@@ -1,0 +1,696 @@
+﻿@model Chnage.Models.ECO
+
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "ECO Details";
+}
+<style type="text/css">
+    textarea {
+        border: 0 none white;
+        overflow-y: scroll;
+        padding: 0;
+        outline: none;
+        background-color: #D0D0D0;
+        resize: none;
+    }
+</style>
+<script type="text/javascript">
+    var observe;
+    if (window.attachEvent) {
+        observe = function (element, event, handler) {
+            element.attachEvent('on' + event, handler);
+        };
+    }
+    else {
+        observe = function (element, event, handler) {
+            element.addEventListener(event, handler, false);
+        };
+    }
+    $(function () {
+        $('textarea[data-editor="ck"]').each(function () {
+            init(this.id);
+        });
+    });
+    function init(x) {
+        var text = document.getElementById(x);
+        function resize() {
+            text.style.height = 'auto';
+            text.style.height = text.scrollHeight + 'px';
+        }
+        /* 0-timeout to get the already changed text */
+        function delayedResize() {
+            window.setTimeout(resize, 0);
+        }
+        observe(text, 'change', resize);
+        observe(text, 'cut', delayedResize);
+        observe(text, 'paste', delayedResize);
+        observe(text, 'drop', delayedResize);
+        observe(text, 'keydown', delayedResize);
+
+        text.focus();
+        text.select();
+        resize();
+        deselectAll();
+    }
+    function deselectAll() {
+        var element = document.activeElement;
+
+        if (element && /INPUT|TEXTAREA/i.test(element.tagName)) {
+            if ('selectionStart' in element) {
+                element.selectionEnd = element.selectionStart;
+            }
+            element.blur();
+        }
+
+        if (window.getSelection) { // All browsers, except IE <=8
+            window.getSelection().removeAllRanges();
+        } else if (document.selection) { // IE <=8
+            document.selection.empty();
+        }
+    }
+</script>
+<div class="row text-center">
+    <h2>
+        Details for Engineering Change Order
+    </h2>
+    <hr />
+</div>
+<body @*onload="init();"*@>
+    <div>
+        <ul class="nav nav-tabs" role="tablist">
+            <li role="presentation" class="active">
+                <a href="#home" aria-controls="home" role="tab" data-toggle="tab">Home</a>
+            </li>
+            <li role="presentation">
+                <a href="#relatedecrs" aria-controls="relatedecrs" role="tab" data-toggle="tab">Related ECRs</a>
+            </li>
+            <li role="presentation">
+                <a href="#links" aria-controls="links" role="tab" data-toggle="tab">Links</a>
+            </li>
+            <li role="presentation">
+                <a href="#products" aria-controls="products" role="tab" data-toggle="tab">Affected Products</a>
+            </li>
+            <li role="presentation">
+                <a href="#auditlog" aria-controls="auditlog" role="tab" data-toggle="tab">Audit Log</a>
+            </li>
+        </ul>
+        <div class="tab-content">
+            <div role="tabpanel" class="tab-pane active" id="home">
+                <form asp-action="Details" asp-controller="ECNs" method="post" id="DetailsForm">
+                    <br />
+                    <div class="row">
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label asp-for="Id" class="control-label"></label>
+                                <div class="form-control">
+                                    @Html.DisplayFor(m => m.Id)
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label asp-for="ChangeType" class="control-label"></label>
+                                <div class="form-control">
+                                    @Html.DisplayFor(m => m.ChangeType.Name)
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label asp-for="PriorityLevel" class="control-label"></label>
+                                <div class="form-control">
+                                    @Html.DisplayFor(m => m.PriorityLevel)
+                                </div>
+                                <span asp-validation-for="PriorityLevel" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label asp-for="ImplementationType" class="control-label"></label>
+                                <div class="form-control">
+                                    @Html.DisplayFor(m => m.ImplementationType)
+                                </div>
+                                <span asp-validation-for="ImplementationType" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label asp-for="PlannedImplementationDate" class="control-label"></label>
+                                <div class="form-control">
+                                    @Html.DisplayFor(m => m.PlannedImplementationDate)
+                                </div>
+                                <span asp-validation-for="PlannedImplementationDate" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <div class="form-control">
+                                    <label>
+                                        @Html.DisplayNameFor(model => model.PermanentChange)
+                                    </label>
+                                    <input asp-for="PermanentChange" disabled />
+                                    @*@Html.DisplayTextFor(m => m.PermanentChange)*@
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <div class="form-control">
+                                    <label>
+                                        @Html.DisplayNameFor(model => model.BOMRequired)
+                                    </label>
+                                    <input asp-for="BOMRequired" disabled />
+                                    @*@Html.DisplayTextFor(m => m.BOMRequired)*@
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <div class="form-control">
+                                    <label class="control-label">
+                                        @Html.DisplayNameFor(model => model.ProductValidationTestingRequired)
+                                    </label>
+                                    <input asp-for="ProductValidationTestingRequired" disabled />
+                                    @*@Html.DisplayTextFor(m => m.ProductValidationTestingRequired)*@
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label asp-for="Description" class="control-label"></label>
+                                <textarea rows="8" id="description" data-editor="ck" asp-for="Description" class="form-control" disabled></textarea>
+                                <span asp-validation-for="Description" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label asp-for="ReasonForChange" class="control-label"></label>
+                                <textarea rows="8" id="reasonforchange" data-editor="ck" asp-for="ReasonForChange" class="form-control" disabled></textarea>
+                                <span asp-validation-for="ReasonForChange" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label>Sending Notifications to:</label>
+                                <ul class="list-group">
+
+                                    @if (Model.Notifications != null)
+                                    {
+                                        foreach (var not in Model.Notifications)
+                                        {
+                                            string text = not.User.Name + " at " + EnumHelper<NotificationOption>.GetDisplayValue(not.Option);
+                                            <li class="list-group-item-text list-group-item">
+                                                <p>
+                                                    @text
+                                                </p>
+                                            </li>
+                                        }
+                                    }
+                                </ul>
+                                @if (!Model.Status.Equals(StatusOptions.Approved) && !Model.Status.Equals(StatusOptions.RejectedApproval))
+                                {
+                                    @if (!ViewBag.LoggedUserIsApprover && !ViewBag.LoggedUserIsValidator && !ViewBag.LoggedUserIsOriginator)
+                                    {
+                                        @if (ViewBag.IsUserInNotificatonList)
+                                        {
+                                            <div class="form-group">
+                                                <label class="control-label">&nbsp;</label>
+                                                <a asp-action="AddToNotification" asp-controller="ECOs" asp-route-id="@Model.Id" class="btn btn-block btn-danger">Remove from Notification</a>
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <div class="form-group">
+                                                <label class="control-label">&nbsp;</label>
+                                                <a asp-action="AddToNotification" asp-controller="ECOs" asp-route-id="@Model.Id" class="btn btn-block btn-info">Add to Notification</a>
+                                            </div>
+                                        }
+                                    }
+
+                                }
+
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="control-label">
+                                    @Html.DisplayNameFor(m => m.AreasAffected)
+                                </label>
+                                <ul class="list-inline">
+                                    @if (Model.AreasAffected != null)
+                                    {
+                                        for (int i = 0; i < Model.AreasAffected.Count; i++)
+                                        {
+                                            <li>
+                                                <label class="btn btn-primary">
+                                                    <input type="checkbox" value="True" checked class="ckboxPreventClick" />
+                                                    @Html.DisplayFor(m => Model.AreasAffected.ToList()[i].RequestType.Name)
+                                                </label>
+                                            </li>
+                                        }
+                                    }
+                                </ul>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label">Validators</label>
+                                <ul class="list-inline" id="listValidatorsInline">
+                                    @{
+                                        if (Model.Approvers != null)
+                                        {
+                                            foreach (var test in Model.Approvers.Where(a => a.UserRole.RoleInt == Role.Validator).GroupBy(a => a.UserRole.RequestType))
+                                            {
+                                                var groupName = test.Key.Name;
+                                                <li name="@groupName" class="list-group-item">
+                                                    <label class="control-label">@groupName</label>
+                                                    <br />
+                                                    @foreach (var item in test)
+                                                    {
+                                                        var currentApprover = item;
+                                                        string approverStyle = "";
+                                                        bool? approved = currentApprover.Approval;
+                                                        if (approved == null)
+                                                        {
+                                                            approverStyle = "background-color:#cac7ed;";
+                                                        }
+                                                        else
+                                                        {
+                                                            if ((bool)approved)
+                                                            {
+                                                                approverStyle = "background-color:lightgreen;";
+
+                                                            }
+                                                            else
+                                                            {
+                                                                approverStyle = "background-color:lightcoral; color:white;";
+                                                            }
+                                                        }
+                                                        <div class="form-control" title="@item.AprovedDate" style="@approverStyle margin:2px;">
+                                                            @Html.DisplayFor(m => currentApprover.UserRole.User.Name)
+                                                        </div>
+                                                        <input type="hidden" id="approverOption" name="ApproverOption" />
+                                                        <input type="hidden" name="UserRoleId" value="@currentApprover.UserRoleId" />
+                                                    }
+                                                    @if (Model.NotesForValidator != null)
+                                                    {
+                                                        foreach (var kvp in Model.NotesForValidator)
+                                                        {
+                                                            if (kvp.Key == groupName)
+                                                            {
+                                                                if (!String.IsNullOrEmpty(kvp.Value))
+                                                                {
+                                                                    <textarea disabled class="form-control" data-editor="ck" id="validatornotestext">
+                                                                        @Html.DisplayFor(m => kvp.Value)
+                                                                    </textarea>
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                    <input type="hidden" name="ChangeId" value="@Model.Id" />
+                                                </li>
+                                            }
+                                        }
+                                    }
+                                </ul>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label">Approvers</label>
+                                <ul class="list-inline" id="listApproverInline">
+                                    @{
+                                        if (Model.Approvers != null)
+                                        {
+                                            foreach (var test in Model.Approvers.Where(a => a.UserRole.RoleInt == Role.Approver).GroupBy(a => a.UserRole.RequestType))
+                                            {
+                                                var groupName = test.Key.Name;
+                                                <li name="@groupName" class="list-group-item">
+                                                    <label class="control-label">@groupName</label>
+                                                    <br />
+                                                    @foreach (var item in test)
+                                                    {
+                                                        var currentApprover = item;
+                                                        string approverStyle = "";
+                                                        bool? approved = currentApprover.Approval;
+                                                        if (approved == null)
+                                                        {
+                                                            approverStyle = "background-color:#cac7ed;";
+                                                        }
+                                                        else
+                                                        {
+                                                            if ((bool)approved)
+                                                            {
+                                                                approverStyle = "background-color:lightgreen;";
+
+                                                            }
+                                                            else
+                                                            {
+                                                                approverStyle = "background-color:lightcoral; color:white;";
+                                                            }
+                                                        }
+                                                        <div class="form-control" title="@item.AprovedDate" style="@approverStyle margin:2px;">
+                                                            @Html.DisplayFor(m => currentApprover.UserRole.User.Name)
+                                                        </div>
+                                                        <input type="hidden" id="approverOption" name="ApproverOption" />
+                                                        <input type="hidden" name="UserRoleId" value="@currentApprover.UserRoleId" />
+                                                    }
+                                                    @if (Model.NotesForApprover != null)
+                                                    {
+                                                        foreach (var kvp in Model.NotesForApprover)
+                                                        {
+                                                            if (kvp.Key == groupName)
+                                                            {
+                                                                if (!String.IsNullOrEmpty(kvp.Value))
+                                                                {
+                                                                    <textarea disabled data-editor="ck" class="form-control" id="approvernotestext">
+                                                                        @Html.DisplayFor(m => kvp.Value)
+                                                                    </textarea>
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                    <input type="hidden" name="ChangeId" value="@Model.Id" />
+                                                </li>
+                                            }
+                                        }
+                                    }
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label asp-for="PreviousRevision"></label>
+                                        <textarea id="prevrevtext" data-editor="ck" disabled class="form-control">
+                                            @Html.DisplayFor(i => i.PreviousRevision)
+                                        </textarea>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label asp-for="NewRevision"></label>
+                                        <textarea id="nextrevtext" disabled data-editor="ck" class="form-control">
+                                            @Html.DisplayFor(i => i.NewRevision)
+                                        </textarea>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label class="control-label">
+                                            Originator
+                                        </label>
+                                        <div class="form-control">
+                                            @Html.DisplayFor(m => Model.Originator.Name)
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label asp-for="CreatedDate" class="control-label"></label>
+                                        <div class="form-control">
+                                            @Html.DisplayFor(m => Model.CreatedDate)
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label class="control-label" asp-for="ClosedDate"></label>
+                                        <div class="form-control">
+                                            @Html.DisplayFor(m => m.ClosedDate)
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        @{
+                                            string colour = "";
+                                            string status = Model.Status.ToString();
+                                            if (status.ToLower().Contains("approved"))
+                                            {
+                                                colour = "#98fb98";
+                                            }
+                                            else if (status.ToLower().Contains("rejected"))
+                                            {
+                                                colour = "#fb9898";
+                                            }
+                                        }
+                                        <label class="control-label" asp-for="Status"></label>
+                                        <div class="form-control" style="background-color:@colour">
+                                            @Html.DisplayFor(m => m.Status)
+                                        </div>
+                                        @if (Model.Status.Equals(StatusOptions.RejectedApproval) || Model.Status.Equals(StatusOptions.RejectedValidation))
+                                        {
+                                            <textarea id="rejectreason" data-editor="ck" class="form-control">
+                                                @Html.DisplayFor(m => m.RejectReason)
+                                            </textarea>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        @if (!Model.Status.Equals(StatusOptions.Approved) && !Model.Status.Equals(StatusOptions.RejectedApproval) && !Model.Status.Equals(StatusOptions.RejectedValidation))
+                        {
+                            bool validated = false;
+                            if (ViewBag.ChangeValidated)
+                            {
+                                validated = true;
+                            }
+                            if (ViewBag.LoggedUserIsValidator)
+                            {
+                                <div class="col-md-2"></div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label class="control-label">&nbsp;</label>
+                                        <a asp-action="Main" asp-controller="Home" class="btn btn-block btn-default">Back to Home</a>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <label>&nbsp;</label>
+                                    <input type="submit" asp-action="Details" asp-controller="ECOs" id="btnRejectChange" class="btn btn-block btn-danger" form="DetailsForm" onclick="RejectPopup()" value="Reject Change" />
+                                    <div class="hidden">
+                                        <input type="text" asp-for="RejectReason" ID="RejectReason" class="form-control" />
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <label>&nbsp;</label>
+                                    <input type="submit" asp-action="Details" asp-controller="ECOs" id="btnApproveChange" class="btn btn-block btn-success" form="DetailsForm" value="Approve Change" />
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label class="control-label">&nbsp;</label>
+                                        <a asp-action="PrintPDF" asp-route-id="@Model.Id" class="btn btn-block btn-primary" target="_blank">Download As PDF</a>
+                                    </div>
+                                </div>
+                            }
+                            else if (ViewBag.LoggedUserIsApprover)
+                            {
+                                <div class="col-md-2"></div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label class="control-label">&nbsp;</label>
+                                        <a asp-action="Main" asp-controller="Home" class="btn btn-block btn-default">Back to Home</a>
+                                    </div>
+                                </div>
+                                if (validated)
+                                {
+                                    <div class="col-md-2">
+                                        <label>&nbsp;</label>
+                                        <input type="submit" asp-action="Details" asp-controller="ECOs" id="btnRejectChange" class="btn btn-block btn-danger" form="DetailsForm" onclick="RejectPopup()" value="Reject Change" />
+                                        <div class="hidden">
+                                            <input type="text" asp-for="RejectReason" ID="RejectReason" class="form-control" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label>&nbsp;</label>
+                                        <input type="submit" asp-action="Details" asp-controller="ECOs" id="btnApproveChange" class="btn btn-block btn-success" form="DetailsForm" value="Approve Change" />
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="col-md-2">
+                                        <label>&nbsp;</label>
+                                        <input type="submit" asp-action="Details" asp-controller="ECOs" id="btnRejectChange" class="btn btn-block btn-danger disabled" form="DetailsForm" onclick="RejectPopup()" value="Reject Change" />
+                                        <div class="hidden">
+                                            <input type="text" asp-for="RejectReason" ID="RejectReason" class="form-control" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label>&nbsp;</label>
+                                        <input type="submit" asp-action="Details" asp-controller="ECOs" id="btnApproveChange" class="btn btn-block btn-success disabled" form="DetailsForm" value="Approve Change" />
+                                    </div>
+                                }
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label class="control-label">&nbsp;</label>
+                                        <a asp-action="PrintPDF" asp-route-id="@Model.Id" class="btn btn-block btn-primary" target="_blank">Download As PDF</a>
+                                    </div>
+                                </div>
+                            }
+                            else if (ViewBag.LoggedUserIsOriginator)
+                            {
+                                <div class="col-md-2"></div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label class="control-label">&nbsp;</label>
+                                        <a asp-action="Main" asp-controller="Home" class="btn btn-block btn-default">Back to Home</a>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label class="control-label">&nbsp;</label>
+                                        <a asp-action="Edit" asp-controller="ECOs" asp-route-id="@Model.Id" class="btn btn-block btn-success">Edit</a>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label class="control-label">&nbsp;</label>
+                                        <a asp-action="PrintPDF" asp-route-id="@Model.Id" class="btn btn-block btn-primary" target="_blank">Download As PDF</a>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label class="control-label">&nbsp;</label>
+                                        <a asp-action="ReminderEmail" asp-controller="ECOs" asp-route-id="@Model.Id" class="btn btn-block btn-warning reminder">Reminder Email</a>
+                                    </div>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="col-md-4"></div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label class="control-label">&nbsp;</label>
+                                        <a asp-action="Main" asp-controller="Home" class="btn btn-block btn-default">Back to Home</a>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label class="control-label">&nbsp;</label>
+                                        <a asp-action="PrintPDF" asp-route-id="@Model.Id" class="btn btn-block btn-primary" target="_blank">Download As PDF</a>
+                                    </div>
+                                </div>
+                            }
+                        }
+                        else if (ViewBag.ECOWasRejected)
+                        {
+                            <div class="col-md-3"></div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <label class="control-label">&nbsp;</label>
+                                    <a asp-action="Main" asp-controller="Home" class="btn btn-block btn-default">Back to Home</a>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <label class="control-label">&nbsp;</label>
+                                    <a asp-action="Clone" asp-controller="ECOs" asp-route-id="@Model.Id" class="btn btn-block btn-success">Clone ECO</a>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <label class="control-label">&nbsp;</label>
+                                    <a asp-action="PrintPDF" asp-route-id="@Model.Id" class="btn btn-block btn-primary" target="_blank">Download As PDF</a>
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="col-md-4"></div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <label class="control-label">&nbsp;</label>
+                                    <a asp-action="Main" asp-controller="Home" class="btn btn-block btn-default">Back to Home</a>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <label class="control-label">&nbsp;</label>
+                                    <a asp-action="PrintPDF" asp-route-id="@Model.Id" class="btn btn-block btn-primary" target="_blank">Download As PDF</a>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group hidden">
+                                <select asp-for="OriginatorId" class="form-control" asp-items="ViewBag.OriginatorId"></select>
+                            </div>
+                        </div>
+                    </div>
+                    @if (!string.IsNullOrEmpty(ViewBag.ReminderEmailConfirmation))
+                    {
+                        <div class="row">
+                            <div col-md-12">
+                                <div class="form-control text-center">
+                                    <b>@ViewBag.ReminderEmailConfirmation</b>
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+                </form>
+            </div>
+            <div role="tabpanel" class="tab-pane" id="relatedecrs">
+                <div class="table-responsive">
+                    <partial name="PartialIndexECR" model="ViewBag.ECRs">
+                </div>
+            </div>
+            <div role="tabpanel" class="tab-pane" id="links">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h2>
+                            Documentation Links:
+                        </h2>
+                        <ul class="list-group list-inline">
+                            @{
+                                if (Model.LinkUrls != null)
+                                {
+                                    foreach (var link in Model.LinkUrls)
+                                    {
+                                        <li>
+                                            <label class="control-label">
+                                                @link.Key
+                                            </label>
+                                            <a href="@link.Value" target="_blank" class="form-control">
+                                                @link.Value
+                                            </a>
+                                        </li>
+                                    }
+                                }
+                            }
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div id="products" class="tab-pane">
+                <partial name="PartialAffectedProductsECO" model="Model.AffectedProducts" />
+            </div>
+            <div id="auditlog" class="tab-pane">
+                <div class="row">
+                    <div class="col-md-12">
+                        @if (ViewBag.AuditLog != null && ViewBag.AuditLog.Count > 0)
+                        {
+                            <div class="table-responsive">
+                                <partial name="PartialAuditLogForECOs" model="ViewBag.AuditLog" />
+                            </div>
+                        }
+                        @if (ViewBag.AuditLogECO != null && ViewBag.AuditLogECO.Count > 0)
+                        {
+                            <div class="table-responsive">
+                                <partial name="PartialAuditLogECO" model="ViewBag.AuditLogECO" />
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>

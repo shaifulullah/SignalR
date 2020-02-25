@@ -1,0 +1,128 @@
+﻿@model UserDelegateViewModel
+
+@using (Html.BeginForm(string.Empty, "UserDelegate", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    <div class="content">
+        <div id="error-display" class="popup-error">
+            @ViewBag.ErrorMessage
+        </div>
+
+        <div class="padding-bottom-5">
+            @Html.Button(ResourceStrings.Text_Save, new { @class = "save-button", @type = "button", @id = "imgBtSave" },
+                Model.DataAction != DataOperation.EDIT_VIEW || AuthorizeUser.CanPerformAction(PageId.PAGE_USERDELEGATE, DataOperation.UPDATE))
+        </div>
+
+        <fieldset class="form-layout">
+            <legend></legend>
+
+            @Html.Hidden("title", string.Format("{0} [{1}]", ApplicationGlobals.GetActionText(Model.DataAction), ResourceStrings.Text_UserDelegate))
+
+            @Html.HiddenFor(model => model.DataAction)
+            @Html.HiddenFor(model => model.LnUserAccountId)
+            @Html.HiddenFor(model => model.LnDelegateUserAccountId, new { @id = "hidLnDelegateUserAccountId" })
+            @Html.HiddenFor(model => model.LnSecurityRolesId, new { @id = "hidLnSecurityRolesId" })
+
+            <table class="form-table">
+                <tr>
+                    <td class="form-label">@Html.LabelFor(model => model.SecurityRoles)<b class="form-required">&#42;</b></td>
+                    <td>
+                        @if (Model.DataAction == DataOperation.CREATE)
+                        {
+                            <span class="search-box">
+                                <nobr>
+                                    @Html.TextBoxFor(model => model.SecurityRoles, new { @id = "txBxSecurityRoles", @readonly = "readonly" })
+                                    <input type="button" id="imgBtSecurityRoles" />
+                                </nobr>
+                            </span>
+                        }
+                        else
+                        {
+                            @Html.TextBoxFor(model => model.SecurityRoles, new { @readonly = "readonly" })
+                        }
+                    </td>
+                    <td class="form-error">@Html.ValidationMessageFor(model => model.SecurityRoles)</td>
+                </tr>
+                <tr>
+                    <td class="form-label">@Html.LabelFor(model => model.DelegateUserName)<b class="form-required">&#42;</b></td>
+                    <td>
+                        @if (Model.DataAction == DataOperation.CREATE)
+                        {
+                            <span class="search-box">
+                                <nobr>
+                                    @Html.TextBoxFor(model => model.DelegateUserName, new { @id = "txBxDelegateUserName", @readonly = "readonly" })
+                                    <input type="button" id="imgBtDelegateUserName" />
+                                </nobr>
+                            </span>
+                        }
+                        else
+                        {
+                            @Html.TextBoxFor(model => model.DelegateUserName, new { @readonly = "readonly" })
+                        }
+                    </td>
+                    <td class="form-error">@Html.ValidationMessageFor(model => model.DelegateUserName)</td>
+                </tr>
+                <tr>
+                    <td class="form-label">@Html.LabelFor(model => model.DateTimeStart)<b class="form-required">&#42;</b></td>
+                    <td>@Html.TextBoxFor(model => model.DateTimeStart, new { @id = "txBxDateTimeStart", @style = "width: 307px" })</td>
+                    <td class="form-error">@Html.ValidationMessageFor(model => model.DateTimeStart)</td>
+                </tr>
+                <tr>
+                    <td class="form-label">@Html.LabelFor(model => model.DateTimeEnd)<b class="form-required">&#42;</b></td>
+                    <td>@Html.TextBoxFor(model => model.DateTimeEnd, new { @id = "txBxDateTimeEnd", @style = "width: 307px" })</td>
+                    <td class="form-error">@Html.ValidationMessageFor(model => model.DateTimeEnd)</td>
+                </tr>
+                <tr>
+                    <td class="form-label">@Html.LabelFor(model => model.FlagIsApprover)</td>
+                    <td>@Html.CheckBoxFor(model => model.FlagIsApprover, ((Model.DelegateFlagIsApprover) || (Model.DataAction == DataOperation.EDIT_VIEW && Model.FlagIsApprover)) ? new { @id = "chBxFlagIsApprover" } : (object)new { @id = "chBxFlagIsApprover", @disabled = "disabled" })</td>
+                    <td class="form-error">@Html.ValidationMessageFor(model => model.FlagIsApprover)</td>
+                </tr>
+            </table>
+        </fieldset>
+
+        @if (Model.DataAction == DataOperation.EDIT_VIEW)
+        {
+            @Html.HiddenFor(model => model.Id, new { id = "hidId" })
+            @Html.HiddenFor(model => model.DateTimeStart)
+
+            <div class="padding-top-5" style="float: right">
+                @Html.Button(ResourceStrings.Text_Previous, new { @class = "previous-button", @type = "button", id = "imgBtPrevious" })
+                @Html.Label("First Record", new { id = "lblCurrentRecord" })
+                @Html.Button(ResourceStrings.Text_Next, new { @class = "next-button", @type = "button", id = "imgBtNext" })
+            </div>
+        }
+    </div>
+}
+
+<script>
+    $(function () {
+        $.validator.addMethod("greaterThan",
+        function (value, element, params) {
+
+            if (!/Invalid|NaN/.test(new Date(value))) {
+                return new Date(value) > new Date($(params).val());
+            }
+
+            return isNaN(value) && isNaN($(params).val()) || (Number(value) > Number($(params).val()));
+        }, '@ResourceStrings.Error_Message_Greater_Than_Date_Time_Start');
+
+        $("#txBxDateTimeEnd").rules('add', { greaterThan: "#txBxDateTimeStart" });
+
+        $("#txBxDateTimeStart, #txBxDateTimeEnd").kendoDatePicker({
+            format: "MM-dd-yyyy",
+            parseFormats: ["MM-dd-yyyy", "MM/dd/yyyy"]
+        });
+
+        $("#txBxDateTimeStart, #txBxDateTimeEnd").attr('readOnly', 'true');
+
+        var date = new Date();
+        var month = date.getMonth() + 1 < 10 ? '0' + date.getMonth() + 1 : date.getMonth() + 1;
+        var day = date.getDate() < 10 ? '0' + date.getDate() : date.getDate();
+
+        var currentDate = month + '-' + day + '-' + date.getFullYear();
+
+        if ($("#txBxDateTimeStart").val() != '' && $("#txBxDateTimeStart").val() <= currentDate) {
+            $("#txBxDateTimeStart").data().kendoDatePicker.enable(false);
+        }
+    });
+</script>

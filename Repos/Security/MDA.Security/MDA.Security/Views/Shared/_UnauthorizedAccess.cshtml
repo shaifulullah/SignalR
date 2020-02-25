@@ -1,0 +1,17 @@
+﻿@model HandleErrorInfo
+@{
+    ViewBag.Title = ResourceStrings.Text_Unauthorized_Access;
+}
+
+<div class="content">
+    <fieldset class="form-layout">
+        <legend></legend>
+        <p>
+            <img src="~/Images/warning.png" style="float: left; padding-right: 10px" />
+        </p>
+        <p><b>@ResourceStrings.Text_Unauthorized_Access</b></p>
+        <p>@ResourceStrings.Error_Message_Unauthorized_Access</p>
+        <br />
+        <p>@ResourceStrings.Message_Contact_Administrator</p>
+    </fieldset>
+</div>

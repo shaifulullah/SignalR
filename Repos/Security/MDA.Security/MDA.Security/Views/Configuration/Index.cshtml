@@ -1,0 +1,82 @@
+﻿@{
+    var resourceManager = new System.Resources.ResourceManager("MDA.Security.Resources.ResourceStrings", typeof(ResourceStrings).Assembly);
+    var configurationType = resourceManager.GetString(string.Format("Text_{0}", ApplicationGlobals.ConfigurationType));
+
+    ViewBag.Title = string.Format(ResourceStrings.Text_Identification, configurationType);
+}
+
+<script>
+    $(function () {
+        $("#gridConfiguration").kendoGrid({
+            columns: [
+                {
+                    headerTemplate: "<input id='chBxSelectAll' type='checkbox' />",
+                    template: "<input id='chBxSelectRow' class='gridCheckBox' type='checkbox' />",
+                    filterable: false, sortable: false, groupable: false, width: 28
+                },
+                { field: "Id", title: "@ResourceStrings.Display_Name_Configuration_Id", hidden: true },
+                { field: "Code", title: "@ResourceStrings.Display_Name_Configuration_Code" },
+                { field: "Description", title: "@configurationType" }
+            ],
+            pageable: { input: false, numeric: true, refresh: true, pageSizes: [15, 20, 30, 40, 50] },
+            groupable: true,
+            sortable: { allowUnsort: false },
+            filterable: true,
+            resizable: true,
+            dataBound: onDataBound,
+            dataSource: {
+                serverPaging: true, serverFiltering: true, serverSorting: true, pageSize: '@ApplicationGlobals.GridMinRows',
+                page: getPage("gridConfiguration"),
+                sort: getSort("gridConfiguration") == null ? { field: "Code", dir: "asc" } : getSort("gridConfiguration"),
+                filter: getFilter("gridConfiguration"),
+                schema: {
+                    data: "Data", total: "Total",
+                    model: {
+                        id: "Id",
+                        fields: {
+                            "Id": { type: "number" },
+                            "Code": { type: "string" },
+                            "Description": { type: "string" }
+                        }
+                    }
+                },
+                transport: {
+                    read: {
+                        url: "../Configuration/ConfigurationPage",
+                        contentType: "application/json; charset=utf-8",
+                        type: "POST",
+                        dataType: "json"
+                    },
+                    parameterMap: function (data) {
+                        return JSON.stringify(data);
+                    }
+                }
+            }
+        });
+
+        $("#gridConfiguration").attr("hiddenSelectedRows", "#hidGridCheckedRowsConfiguration");
+    });
+</script>
+
+@using (Html.BeginForm(string.Empty, "Configuration", FormMethod.Post))
+{
+    <div class="content">
+        <div id="error-display" class="error">
+            @ViewBag.ErrorMessage
+        </div>
+
+        <div class="padding-bottom-5">
+            @Html.Button(ResourceStrings.Text_New, new { @class = "insert-button", @type = "button", @id = "imgBtNew" }, AuthorizeUser.CanPerformAction(PageId.PAGE_CONFIGURATION, DataOperation.CREATE))
+            @Html.Button(ResourceStrings.Text_Edit_View, new { @class = "edit-button", @type = "button", @id = "imgBtEdit" }, AuthorizeUser.CanPerformAction(PageId.PAGE_CONFIGURATION, DataOperation.READ) || AuthorizeUser.CanPerformAction(PageId.PAGE_CONFIGURATION, DataOperation.UPDATE))
+            @Html.Button(ResourceStrings.Text_Copy, new { @class = "copy-button", @type = "button", @id = "imgBtCopy" }, AuthorizeUser.CanPerformAction(PageId.PAGE_CONFIGURATION, DataOperation.CREATE))
+            @Html.Button(ResourceStrings.Text_Delete, new { @class = "delete-button", @type = "button", @id = "imgBtDelete" }, AuthorizeUser.CanPerformAction(PageId.PAGE_CONFIGURATION, DataOperation.DELETE))
+        </div>
+
+        @(Html.Search("ConfigurationSearch").Form("ConfigurationForm").Grid("gridConfiguration"))
+        <div id="gridConfiguration"></div>
+    </div>
+    @Html.Hidden("hidGridCheckedRowsConfiguration")
+}
+
+<div id="window"></div>
+@Scripts.Render("~/bundles/popup", "~/bundles/grid")

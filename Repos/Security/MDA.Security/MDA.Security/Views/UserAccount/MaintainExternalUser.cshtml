@@ -1,0 +1,85 @@
+﻿@model UserAccountViewModel
+
+@using (Html.BeginForm(string.Empty, "UserAccount", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="content">
+        <div id="error-display" class="popup-error">
+            @ViewBag.ErrorMessage
+        </div>
+
+        <div class="padding-bottom-5">
+            @Html.Button(ResourceStrings.Text_Save, new { @class = "save-button", @type = "button", @id = "imgBtSave" },
+                Model.DataAction != DataOperation.EDIT_VIEW || AuthorizeUser.CanPerformAction(PageId.PAGE_USERACCOUNT, DataOperation.UPDATE))
+        </div>
+
+        <fieldset class="form-layout">
+            <legend></legend>
+
+            @Html.Hidden("title", string.Format("{0} [{1}]", ApplicationGlobals.GetActionText(Model.DataAction), ResourceStrings.Text_UserAccount))
+
+            @Html.HiddenFor(model => model.DataAction)
+            @Html.HiddenFor(model => model.LnExternalPersonId, new { @id = "hidLnExternalPersonId" })
+            @Html.HiddenFor(model => model.LnDefaultCompanyId, new { @id = "hidLnDefaultCompanyId" })
+            @Html.HiddenFor(model => model.EmployeeNumber, new { @Value = "Test" })
+
+            <table class="form-table">
+                @if (Model.DataAction == DataOperation.CREATE)
+                {
+                    <tr>
+                        <td class="form-label">@Html.LabelFor(model => model.UserAccountType)<b class="form-required">&#42;</b></td>
+                        <td>@Html.DropDownListFor(model => model.UserAccountType, Model.UserAccountTypeList, new { @id = "dpdUserAccountType", @style = "width: 305px" })</td>
+                        <td class="form-error">@Html.ValidationMessageFor(model => model.UserAccountType)</td>
+                    </tr>
+                }
+
+                <tr>
+                    <td class="form-label">@Html.LabelFor(model => model.PersonCode)<b class="form-required">&#42;</b></td>
+                    <td>
+                        <span class="search-box">
+                            <nobr>
+                                @Html.TextBoxFor(model => model.PersonCode, new { @id = "txBxPersonCode", @readonly = "readonly" })
+                                <input type="button" id="imgBtPersonCode" />
+                            </nobr>
+                        </span>
+                    </td>
+                    <td class="form-error">@Html.ValidationMessageFor(model => model.PersonCode)</td>
+                </tr>
+                <tr>
+                    <td class="form-label">@Html.LabelFor(model => model.FullName)</td>
+                    <td>@Html.TextBoxFor(model => model.FullName, new { @id = "txBxFullName", @readonly = "readonly" })</td>
+                    <td class="form-error">@Html.ValidationMessageFor(model => model.FullName)</td>
+                </tr>
+                <tr>
+                    <td class="form-label">@Html.LabelFor(model => model.UserName)<b class="form-required">&#42;</b></td>
+                    <td>@Html.TextBoxFor(model => model.UserName, new { @id = "txBxUserName" })</td>
+                    <td class="form-error">@Html.ValidationMessageFor(model => model.UserName)</td>
+                </tr>
+                <tr>
+                    <td class="form-label">@Html.LabelFor(model => model.Company)<b class="form-required">&#42;</b></td>
+                    <td>
+                        <span class="search-box">
+                            <nobr>
+                                @Html.TextBoxFor(model => model.Company, new { @id = "txBxCompany", @readonly = "readonly" })
+                                <input type="button" id="imgBtCompany" />
+                            </nobr>
+                        </span>
+                    </td>
+                    <td class="form-error">@Html.ValidationMessageFor(model => model.Company)</td>
+                </tr>
+                <tr>
+                    <td class="form-label">@Html.LabelFor(model => model.Domain)<b class="form-required">&#42;</b></td>
+                    <td>@Html.DropDownListFor(model => model.Domain, Model.DomainList, string.Format(ResourceStrings.Text_Select, ResourceStrings.Text_Domain), new { style = "width: 305px" })</td>
+                    <td class="form-error">@Html.ValidationMessageFor(model => model.Domain)</td>
+                </tr>
+            </table>
+        </fieldset>
+
+        @if (Model.DataAction == DataOperation.EDIT_VIEW)
+        {
+            @Html.HiddenFor(model => model.Id, new { id = "hidId" })
+            @Html.HiddenFor(model => model.UserAccountType)
+        }
+    </div>
+}

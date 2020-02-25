@@ -1,0 +1,94 @@
+﻿@{
+    ViewBag.Title = string.Format(ResourceStrings.Text_Identification, ResourceStrings.Text_SecurityBusinessEntities);
+}
+
+<script>
+    $(function () {
+        removeCookies("gridBusinessEntityAccessByAD, gridBusinessEntityAccessByRole, gridBusinessEntityAccessByUser, gridBusinessEntityRestrictionByAD, gridBusinessEntityRestrictionByRole, gridBusinessEntityRestrictionByUser");
+
+        $("#gridSecurityBusinessEntities").prop("selectedRows", $.cookie("SELECTED-gridSecurityBusinessEntities"));
+        $("#hidGridCheckedRowsSecurityBusinessEntities").val($.cookie("SELECTED-gridSecurityBusinessEntities"));
+
+        $("#gridSecurityBusinessEntities").kendoGrid({
+            columns: [
+                {
+                    headerTemplate: "<input id='chBxSelectAll' type='checkbox' />",
+                    template: "<input id='chBxSelectRow' class='gridCheckBox' type='checkbox' />",
+                    filterable: false, sortable: false, groupable: false, width: 28
+                },
+                { field: "Code", title: "@ResourceStrings.Display_Name_SecurityBusinessEntities_Code" },
+                { field: "Description", title: "@ResourceStrings.Display_Name_SecurityBusinessEntities_Description" },
+                { field: "Id", title: "@ResourceStrings.Display_Name_SecurityBusinessEntities_Id", hidden: true }
+            ],
+            pageable: { input: false, numeric: true, refresh: true, pageSizes: [15, 20, 30, 40, 50] },
+            groupable: true,
+            sortable: { allowUnsort: false },
+            filterable: true,
+            resizable: true,
+            dataBound: onDataBound,
+            dataSource: {
+                serverPaging: true, serverFiltering: true, serverSorting: true, pageSize: '@ApplicationGlobals.GridMinRows',
+                page: getPage("gridSecurityBusinessEntities"),
+                sort: getSort("gridSecurityBusinessEntities") == null ? { field: "Code", dir: "asc" } : getSort("gridSecurityBusinessEntities"),
+                filter: getFilter("gridSecurityBusinessEntities"),
+                schema: {
+                    data: "Data", total: "Total",
+                    model: {
+                        id: "Id",
+                        fields: {
+                            "Code": { type: "string" },
+                            "Description": { type: "string" },
+                            "Id": { type: "number" }
+                        }
+                    }
+                },
+                transport: {
+                    read: {
+                        url: "SecurityBusinessEntities/SecurityBusinessEntitiesPage",
+                        contentType: "application/json; charset=utf-8",
+                        type: "POST",
+                        dataType: "json"
+                    },
+                    parameterMap: function (data) {
+                        return JSON.stringify(data);
+                    }
+                }
+            }
+        });
+
+        $("#gridSecurityBusinessEntities").attr("hiddenSelectedRows", "#hidGridCheckedRowsSecurityBusinessEntities");
+    });
+</script>
+
+@using (Html.BeginForm(string.Empty, "SecurityBusinessEntities", FormMethod.Post))
+{
+    <div class="content">
+        <div id="error-display" class="error">
+            @ViewBag.ErrorMessage
+        </div>
+
+        <div class="padding-bottom-5">
+            @Html.Button(ResourceStrings.Text_New, new { @class = "insert-button", @type = "button", @id = "imgBtNew" }, AuthorizeUser.CanPerformAction(PageId.PAGE_SECURITYBUSINESSENTITIES, DataOperation.CREATE))
+            @Html.Button(ResourceStrings.Text_Edit_View, new { @class = "edit-button", @type = "button", @id = "imgBtEdit" }, AuthorizeUser.CanPerformAction(PageId.PAGE_SECURITYBUSINESSENTITIES, DataOperation.READ) || AuthorizeUser.CanPerformAction(PageId.PAGE_SECURITYBUSINESSENTITIES, DataOperation.UPDATE))
+            @Html.Button(ResourceStrings.Text_Copy, new { @class = "copy-button", @type = "button", @id = "imgBtCopy" }, AuthorizeUser.CanPerformAction(PageId.PAGE_SECURITYBUSINESSENTITIES, DataOperation.CREATE))
+            @Html.Button(ResourceStrings.Text_Delete, new { @class = "delete-button", @type = "button", @id = "imgBtDelete" }, AuthorizeUser.CanPerformAction(PageId.PAGE_SECURITYBUSINESSENTITIES, DataOperation.DELETE))
+        </div>
+
+        <div class="padding-bottom-5">
+            @Html.Button(ResourceStrings.Text_Access_By_AD, new { @class = "access-by-activedirectory-button", @value = "Access By AD", @name = "SecurityBusinessEntitiesForm", @id = "imgBtAccessByAD" }, AuthorizeUser.CanPerformAction(PageId.PAGE_BUSINESSENTITYACCESSBYAD, DataOperation.ACCESS))
+            @Html.Button(ResourceStrings.Text_Restriction_By_AD, new { @class = "restriction-by-activedirectory-button", @value = "Restriction By AD", @name = "SecurityBusinessEntitiesForm", @id = "imgBtRestrictionByAD" }, AuthorizeUser.CanPerformAction(PageId.PAGE_BUSINESSENTITYRESTRICTIONBYAD, DataOperation.ACCESS))
+            @Html.Button(ResourceStrings.Text_Access_By_Role, new { @class = "access-by-role-button", @value = "Access By Role", @name = "SecurityBusinessEntitiesForm", @id = "imgBtAccessByRole" }, AuthorizeUser.CanPerformAction(PageId.PAGE_BUSINESSENTITYACCESSBYROLE, DataOperation.ACCESS))
+            @Html.Button(ResourceStrings.Text_Restriction_By_Role, new { @class = "restriction-by-role-button", @value = "Restriction By Role", @name = "SecurityBusinessEntitiesForm", @id = "imgBtRestrictionByRole" }, AuthorizeUser.CanPerformAction(PageId.PAGE_BUSINESSENTITYRESTRICTIONBYROLE, DataOperation.ACCESS))
+            @Html.Button(ResourceStrings.Text_Access_By_User, new { @class = "access-by-user-button", @value = "Access By User", @name = "SecurityBusinessEntitiesForm", @id = "imgBtAccessByUser" }, AuthorizeUser.CanPerformAction(PageId.PAGE_BUSINESSENTITYACCESSBYUSER, DataOperation.ACCESS))
+            @Html.Button(ResourceStrings.Text_Restriction_By_User, new { @class = "restriction-by-user-button", @value = "Restriction By User", @name = "SecurityBusinessEntitiesForm", @id = "imgBtRestrictionByUser" }, AuthorizeUser.CanPerformAction(PageId.PAGE_BUSINESSENTITYRESTRICTIONBYUSER, DataOperation.ACCESS))
+        </div>
+
+        @(Html.Search("SecurityBusinessEntitiesSearch").Form("SecurityBusinessEntitiesForm").Grid("gridSecurityBusinessEntities"))
+        <div id="gridSecurityBusinessEntities"></div>
+    </div>
+
+    @Html.Hidden("hidGridCheckedRowsSecurityBusinessEntities")
+}
+
+<div id="window"></div>
+@Scripts.Render("~/bundles/popup", "~/bundles/grid")

@@ -1,0 +1,17 @@
+﻿@model HandleErrorInfo
+@{
+    ViewBag.Title = ResourceStrings.Text_Error;
+}
+
+<div class="content">
+    <fieldset class="form-layout">
+        <legend></legend>
+        <p>
+            <img src="~/Images/error.gif" style="float: left; padding-right: 10px" />
+        </p>
+        <p><b>@ResourceStrings.Message_Generic_Error_Line_1</b></p>
+        <p>@ResourceStrings.Message_Generic_Error_Line_2</p>
+        <br />
+        <p>@ResourceStrings.Message_Contact_Administrator</p>
+    </fieldset>
+</div>

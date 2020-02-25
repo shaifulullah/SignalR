@@ -1,0 +1,123 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{B002CAFD-E49B-4AD4-83D0-8FD5DCF266FC}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>MDA.Security.IBLL</RootNamespace>
+    <AssemblyName>MDA.Security.IBLL</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="MDA.Linq">
+      <HintPath>..\..\MDA.Common.Bin\MDA.Linq.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.6\lib\net45\System.Web.Helpers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=5.2.6.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.5.2.6\lib\net45\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Razor.3.2.6\lib\net45\System.Web.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.6\lib\net45\System.Web.WebPages.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.6\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.6\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="IApplicationBll.cs" />
+    <Compile Include="IApplicationSettingsBll.cs" />
+    <Compile Include="IBusinessEntityAccessByADBll.cs" />
+    <Compile Include="IBusinessEntityAccessByRoleBll.cs" />
+    <Compile Include="IBusinessEntityAccessByUserBll.cs" />
+    <Compile Include="IBusinessEntityRestrictionByADBll.cs" />
+    <Compile Include="IBusinessEntityRestrictionByRoleBll.cs" />
+    <Compile Include="IBusinessEntityRestrictionByUserBll.cs" />
+    <Compile Include="ICompanyBll.cs" />
+    <Compile Include="ICompanyInApplicationBll.cs" />
+    <Compile Include="IConfigurationBll.cs" />
+    <Compile Include="IExternalCompanyBll.cs" />
+    <Compile Include="IExternalPersonBll.cs" />
+    <Compile Include="IProjectsBll.cs" />
+    <Compile Include="IRO_DepartmentBll.cs" />
+    <Compile Include="IRO_EmployeeAddInfoBll.cs" />
+    <Compile Include="IRO_EmployeeBll.cs" />
+    <Compile Include="IRO_EmployeeDetailsBll.cs" />
+    <Compile Include="IRO_SkillsBll.cs" />
+    <Compile Include="ISecurityBusinessEntitiesBll.cs" />
+    <Compile Include="ISecurityItemBll.cs" />
+    <Compile Include="ISecurityRoleRightsBll.cs" />
+    <Compile Include="ISecurityRolesBll.cs" />
+    <Compile Include="ISecurityTypeBll.cs" />
+    <Compile Include="ISecurityUserInRolesBll.cs" />
+    <Compile Include="ISecurityUserRightsBll.cs" />
+    <Compile Include="ITreeMenuBll.cs" />
+    <Compile Include="IUserAccountBll.cs" />
+    <Compile Include="IUserAccountDetailsBll.cs" />
+    <Compile Include="IUserApplicationFavouritesBll.cs" />
+    <Compile Include="IUserApplicationSettingsBll.cs" />
+    <Compile Include="IUserAttributeBll.cs" />
+    <Compile Include="IUserDelegateBll.cs" />
+    <Compile Include="IUserInCompanyInApplicationBll.cs" />
+    <Compile Include="IUserInCompanyInApplicationDetailsBll.cs" />
+    <Compile Include="IUserLogBll.cs" />
+    <Compile Include="IUserPreferencesBll.cs" />
+    <Compile Include="IUserSettingsBll.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\MDA.Security.Models\MDA.Security.Models.csproj">
+      <Project>{84caf360-ecd3-43a0-b573-dbcea42f0d13}</Project>
+      <Name>MDA.Security.Models</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

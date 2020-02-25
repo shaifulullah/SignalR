@@ -1,0 +1,136 @@
+﻿@model Dictionary<string, IEnumerable<Chnage.ViewModel.MainPageViewModel>>
+@{
+    ViewData["Title"] = "Main";
+    Layout = "_Layout";
+}
+
+@*<div class="row text-center">
+        <div class="col-md-12">
+            <h2>
+                Main
+            </h2>
+        </div>
+    </div>*@
+<div class="row">
+    <div class="col-md-12">
+        <a class="btn btn-primary" asp-action="Create" asp-controller="ECRs">Create ECR</a>
+        <a class="btn btn-primary" asp-action="Create" asp-controller="ECOs">Create ECO</a>
+        <a class="btn btn-primary" asp-action="Create" asp-controller="ECNs">Create ECN</a>
+        <a class="btn btn-primary" asp-action="Drafts" asp-controller="Home">Drafts (@ViewBag.DraftsCount)</a>
+        <a class="btn btn-primary" asp-action="Manage" asp-controller="Notifications">Manage Notifications</a>
+        <a class="btn btn-primary" href="https://docs.google.com/spreadsheets/d/1IX1Gv_zBlyr2-pFVN2RqJrhWaaCvLVpQ2fE3d2sRbpo/edit#gid=0" target="_blank">Feedback/Bugs</a>
+    </div>
+
+    @foreach (var item in Model)
+    {
+        if (item.Value.Count() > 0)
+        {
+            <div class="col-md-12">
+                <h2>
+                    @item.Key
+                </h2>
+                <div class="table-responsive">
+                    <table class="table MainTable">
+                        <thead>
+                            <tr>
+                                <th class="text-center">
+                                    @Html.DisplayNameFor(m => item.Value.ElementAtOrDefault(0).Type)
+                                </th>
+                                <th class="text-center">
+                                    @Html.DisplayNameFor(m => item.Value.ElementAtOrDefault(0).Id)
+                                </th>
+                                <th class="text-center">
+                                    @Html.DisplayNameFor(m => item.Value.ElementAtOrDefault(0).ChangeType)
+                                </th>
+                                <th class="text-center">
+                                    @Html.DisplayNameFor(m => item.Value.ElementAtOrDefault(0).Description)
+                                </th>
+                                <th class="text-center">
+                                    @Html.DisplayNameFor(m => item.Value.ElementAtOrDefault(0).CreatedDate)
+                                </th>
+                                <th class="text-center">
+                                    @Html.DisplayNameFor(m => item.Value.ElementAtOrDefault(0).ClosedDate)
+                                </th>
+                                <th class="text-center">
+                                    @Html.DisplayNameFor(m => item.Value.ElementAtOrDefault(0).PriorityLevel)
+                                </th>
+                                <th class="text-center">
+                                    @Html.DisplayNameFor(m => item.Value.ElementAtOrDefault(0).Originator)
+                                </th>
+                                <th class="text-center">
+                                    @Html.DisplayNameFor(m => item.Value.ElementAtOrDefault(0).Status)
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var change in item.Value)
+                            {
+                                <tr onclick="CallDetails('@change.Type',@change.Id)" class="text-center MainTableBodyRow">
+                                    <td>
+                                        @Html.DisplayFor(m => change.Type)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(m => change.Id)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(m => change.ChangeType.Name)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(m => change.Description)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(m => change.CreatedDate)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(m => change.ClosedDate)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(m => change.PriorityLevel)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(m => change.Originator.Name)
+                                    </td>
+                                    <td class="status">
+                                        @Html.DisplayFor(m => change.Status)
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        }
+    }
+</div>
+
+@*@{
+    List<string> admins = ViewBag.AdminEmails;
+    string userEmail = (User.Identity as System.Security.Claims.ClaimsIdentity)?.Claims.ElementAt(2).Value;
+    if (admins.Contains(userEmail))
+    {
+        <h2><u>ADMIN FUNCTIONS</u></h2>
+        <label class="hidden">FINE JOHN HERE YOU GO...</label>
+        <div class="row">
+            <div class="col-sm-1 col-md-2">
+                <a class="btn btn-default" asp-action="Create" asp-controller="Files" asp-route-userEmail="@userEmail">Update Website</a>
+            </div>
+            <div class="col-sm-1 col-md-2">
+                <a class="btn btn-default" asp-controller="Admins" asp-action="Index">View All Admins</a>
+                <a class="btn btn-default" asp-controller="Users" asp-action="Index">View All Users</a>
+                <a class="btn btn-default" asp-controller="UserRoles" asp-action="Index">View All User Roles</a>
+                <a class="btn btn-default" asp-controller="Products" asp-action="Index">View All Products</a>
+                <a class="btn btn-default" asp-controller="RequestTypes" asp-action="Index">View All Request Types</a>
+            </div>
+            <div class="col-sm-1 col-md-2">
+                <a class="btn btn-default" asp-controller="Admins" asp-action="Create">Add an Admin</a>
+                <a class="btn btn-default" asp-controller="Users" asp-action="Create">Add a User</a>
+                <a class="btn btn-default" asp-controller="UserRoles" asp-action="Create">Add a User Role</a>
+                <a class="btn btn-default" asp-controller="Products" asp-action="Create">Add a Product</a>
+            </div>
+        </div>
+    }
+}*@
+
+
+
+

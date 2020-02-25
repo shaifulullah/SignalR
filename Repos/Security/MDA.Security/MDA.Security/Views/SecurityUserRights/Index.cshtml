@@ -1,0 +1,129 @@
+﻿@{
+    ViewBag.Title = string.Format(ResourceStrings.Text_Identification, ResourceStrings.Text_SecurityUserRights);
+}
+
+<script>
+    $(function () {
+        $("#gridSecurityUserRights").kendoGrid({
+            columns: [
+                {
+                    headerTemplate: "<input id='chBxSelectAll' type='checkbox' />",
+                    template: "<input id='chBxSelectRow' class='gridCheckBox' type='checkbox' />",
+                    filterable: false, sortable: false, groupable: false, width: 28
+                },
+                { field: "Id", title: "@ResourceStrings.Display_Name_SecurityUserRights_Id", hidden: true },
+                { field: "SecurityItemCode", title: "@ResourceStrings.Display_Name_SecurityUserRights_SecurityItemCode", width: 200 },
+                { field: "SecurityTypeDescription", title: "@ResourceStrings.Display_Name_SecurityUserRights_SecurityTypeDescription" },
+                { field: "CanCreate", title: "@ResourceStrings.Display_Name_SecurityUserRights_CanCreate", template: '<input id="chBxCanCreate" disabled="disabled" type="checkbox" #=CanCreate?"checked=checked":""# />' },
+                { field: "CanRead", title: "@ResourceStrings.Display_Name_SecurityUserRights_CanRead", template: '<input id="chBxCanRead" disabled="disabled" type="checkbox" #=CanRead?"checked=checked":""# />' },
+                { field: "CanUpdate", title: "@ResourceStrings.Display_Name_SecurityUserRights_CanUpdate", template: '<input id="chBxCanUpdate" disabled="disabled" type="checkbox" #=CanUpdate?"checked=checked":""# />' },
+                { field: "CanDelete", title: "@ResourceStrings.Display_Name_SecurityUserRights_CanDelete", template: '<input id="chBxCanDelete" disabled="disabled" type="checkbox" #=CanDelete?"checked=checked":""# />' },
+                { field: "CanExecute", title: "@ResourceStrings.Display_Name_SecurityUserRights_CanExecute", template: '<input id="chBxCanExecute" disabled="disabled" type="checkbox" #=CanExecute?"checked=checked":""# />' },
+                { field: "CanAccess", title: "@ResourceStrings.Display_Name_SecurityUserRights_CanAccess", template: '<input id="chBxCanAccess" disabled="disabled" type="checkbox" #=CanAccess?"checked=checked":""# />' },
+                { command: ["edit"], title: "&nbsp;", filterable: false, sortable: false, groupable: false, skipSearch: true, width: 164 }
+            ],
+            editable: "inline",
+            pageable: { input: false, numeric: true, refresh: true, pageSizes: [15, 20, 30, 40, 50] },
+            groupable: true,
+            sortable: { allowUnsort: false },
+            filterable: true,
+            resizable: true,
+            dataBound: onDataBound,
+            dataSource: {
+                serverPaging: true, serverFiltering: true, serverSorting: true, pageSize: '@ApplicationGlobals.GridMinRows',
+                page: getPage("gridSecurityUserRights"),
+                sort: getSort("gridSecurityUserRights") == null ? { field: "SecurityItemCode", dir: "asc" } : getSort("gridSecurityUserRights"),
+                filter: getFilter("gridSecurityUserRights"),
+                schema: {
+                    data: "Data", total: "Total",
+                    model: {
+                        id: "Id",
+                        fields: {
+                            "Id": { type: "number" },
+                            "SecurityItemCode": { type: "string", editable: false },
+                            "SecurityTypeDescription": { type: "string", editable: false },
+                            "CanCreate": { type: "boolean" },
+                            "CanRead": { type: "boolean" },
+                            "CanUpdate": { type: "boolean" },
+                            "CanDelete": { type: "boolean" },
+                            "CanExecute": { type: "boolean" },
+                            "CanAccess": { type: "boolean" }
+                        }
+                    }
+                },
+                transport: {
+                    update: {
+                        url: "SecurityUserRights/Update",
+                        contentType: "application/json; charset=utf-8",
+                        type: "POST",
+                    },
+                    read: {
+                        url: "SecurityUserRights/SecurityUserRightsPage",
+                        contentType: "application/json; charset=utf-8",
+                        type: "POST",
+                        dataType: "json"
+                    },
+                    parameterMap: function (data) {
+                        return JSON.stringify(data);
+                    }
+                }
+            }
+        });
+
+        $("#gridSecurityUserRights").attr("hiddenSelectedRows", "#hidGridCheckedRowsSecurityUserRights");
+    });
+</script>
+
+@using (Html.BeginForm(string.Empty, "SecurityUserRights", FormMethod.Post))
+{
+    <div class="content">
+        <div id="error-display" class="error">
+            @ViewBag.ErrorMessage
+        </div>
+
+        @Html.GenerateBreadCrumbs("Application,CompanyInApplication,UserInCompanyInApplication", ResourceStrings.Text_SecurityUserRights)
+        @Html.GenerateMasterDetail("Application,CompanyInApplication,UserInCompanyInApplication")
+
+        <div class="padding-bottom-5">
+            @Html.Button(ResourceStrings.Text_Add, new { @class = "insert-button", @type = "button", @id = "imgBtAdd" }, AuthorizeUser.CanPerformAction(PageId.PAGE_SECURITYUSERRIGHTS, DataOperation.CREATE))
+            @Html.Button(ResourceStrings.Text_Remove, new { @class = "delete-button", @type = "button", @id = "imgBtRemove" }, AuthorizeUser.CanPerformAction(PageId.PAGE_SECURITYUSERRIGHTS, DataOperation.DELETE))
+        </div>
+
+        @(Html.Search("SecurityUserRightsSearch").Form("SecurityUserRightsForm").Grid("gridSecurityUserRights"))
+        <div id="gridSecurityUserRights"></div>
+    </div>
+
+    @Html.Hidden("hidGridCheckedRowsSecurityUserRights")
+}
+
+@if (AuthorizeUser.CanPerformAction(PageId.PAGE_SECURITYUSERRIGHTS, DataOperation.CREATE))
+{
+    @(Html.SearchBox("imgBtAdd")
+        .Title(ResourceStrings.Text_SecurityItem)
+        .Sort("Code")
+        .Controller("SecurityUserRights")
+        .Action("AvailableSecurityItemPageForUserInCompanyInApplication")
+        .BindData("add")
+        .Columns(string.Format("Id:{0}:number:true:0,Code:{1}:string:false:20,Description:{2}:string:false:46,SecurityTypeObj.Description:{3}:string:false:30",
+            ResourceStrings.Display_Name_SecurityItem_Id, ResourceStrings.Display_Name_SecurityItem_Code, ResourceStrings.Display_Name_SecurityItem_Description,
+            ResourceStrings.Display_Name_SecurityType_Description)))
+}
+
+<script>
+    function add(returnValues) {
+        if (returnValues !== "") {
+            $.ajax({
+                url: "SecurityUserRights/Insert",
+                data: { ids: returnValues.split(',') },
+                traditional: true,
+                type: "POST",
+                success: function (message) {
+                    $("#error-display").text(message);
+                    $("#gridSecurityUserRights").data().kendoGrid.dataSource.read();
+                }
+            });
+        }
+    }
+</script>
+
+@Scripts.Render("~/bundles/grid")

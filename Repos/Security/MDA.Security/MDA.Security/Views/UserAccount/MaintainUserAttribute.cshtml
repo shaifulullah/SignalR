@@ -1,0 +1,37 @@
+﻿@model UserAttributeViewModel
+
+<div class="content">
+    <div id="error-display" class="popup-error">
+        @ViewBag.ErrorMessage
+    </div>
+    @*<div class="padding-bottom-5">
+        @Html.Button(ResourceStrings.Text_Save, new { @class = "save-button", @type = "button", @id = "imgBtSaveUserAttribute" },
+            AuthorizeUser.CanPerformAction(PageId.PAGE_USERATTRIBUTE, DataOperation.UPDATE))
+    </div>*@
+    <fieldset class="form-layout">
+        <legend></legend>
+
+        @Html.Hidden("title", string.Format("{0}", ResourceStrings.Text_UserAttribute))
+        @Html.HiddenFor(model => model.DataAction)
+
+        <table class="form-table">
+            <tr>
+                <td>
+                    @if (Model.UserAttribute != null)
+                    {
+                        <h4>Employee Location: @Model.UserAttribute.Location</h4>
+                    }
+                    else
+                    {
+                        <h4>Employee Location: No Location Found</h4>
+                    }
+
+                </td>
+            </tr>
+        </table>
+    </fieldset>
+    @*@if (Model.DataAction == DataOperation.EDIT_VIEW)
+    {
+        @Html.HiddenFor(model => model.Id, new { Value = Model.Id })
+    }*@
+</div>

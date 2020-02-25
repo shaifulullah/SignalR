@@ -1,0 +1,122 @@
+﻿@{
+    ViewBag.Title = string.Format(ResourceStrings.Text_Identification, ResourceStrings.Text_BusinessEntityAccessByUser);
+}
+
+<script>
+    $(function () {
+        $("#gridBusinessEntityAccessByUser").kendoGrid({
+            columns: [
+                {
+                    headerTemplate: "<input id='chBxSelectAll' type='checkbox' />",
+                    template: "<input id='chBxSelectRow' class='gridCheckBox' type='checkbox' />",
+                    filterable: false, sortable: false, groupable: false, width: 28
+                },
+                { field: "Id", title: "@ResourceStrings.Display_Name_BusinessEntityAccessByUser_Id", hidden: true },
+                { field: "UserName", title: "@ResourceStrings.Display_Name_BusinessEntityAccessByUser_UserName" },
+                { field: "FullName", title: "@ResourceStrings.Display_Name_BusinessEntityAccessByUser_FullName" },
+                { field: "Value", title: "@ResourceStrings.Display_Name_BusinessEntityAccessByUser_Value" }
+            ],
+            pageable: { input: false, numeric: true, refresh: true, pageSizes: [15, 20, 30, 40, 50] },
+            groupable: true,
+            sortable: { allowUnsort: false },
+            filterable: true,
+            resizable: true,
+            dataBound: onDataBound,
+            dataSource: {
+                serverPaging: true, serverFiltering: true, serverSorting: true, pageSize: '@ApplicationGlobals.GridMinRows',
+                page: getPage("gridBusinessEntityAccessByUser"),
+                sort: getSort("gridBusinessEntityAccessByUser") == null ? { field: "UserName", dir: "asc" } : getSort("gridBusinessEntityAccessByUser"),
+                filter: getFilter("gridBusinessEntityAccessByUser"),
+                schema: {
+                    data: "Data", total: "Total",
+                    model: {
+                        id: "Id",
+                        fields: {
+                            "Id": { type: "number" },
+                            "UserName": { type: "string" },
+                            "FullName": { type: "string" },
+                            "Value": { type: "string" }
+                        }
+                    }
+                },
+                transport: {
+                    read: {
+                        url: "BusinessEntityAccessByUser/BusinessEntityAccessByUserPage",
+                        contentType: "application/json; charset=utf-8",
+                        type: "POST",
+                        dataType: "json"
+                    },
+                    parameterMap: function (data) {
+                        return JSON.stringify(data);
+                    }
+                }
+            }
+        });
+
+        $("#gridBusinessEntityAccessByUser").attr("hiddenSelectedRows", "#hidGridCheckedRowsBusinessEntityAccessByUser");
+    });
+</script>
+
+@using (Html.BeginForm(string.Empty, "BusinessEntityAccessByUser", FormMethod.Post))
+{
+    <div class="content">
+        <div id="error-display" class="error">
+            @ViewBag.ErrorMessage
+        </div>
+
+        @Html.GenerateBreadCrumbs("SecurityBusinessEntities", ResourceStrings.Text_BusinessEntityAccessByUser)
+        @Html.GenerateMasterDetail("SecurityBusinessEntities")
+
+        <div class="padding-bottom-5">
+            @Html.Button(ResourceStrings.Text_New, new { @class = "insert-button", @type = "button", @id = "imgBtNew" }, AuthorizeUser.CanPerformAction(PageId.PAGE_BUSINESSENTITYACCESSBYUSER, DataOperation.CREATE))
+            @Html.Button(ResourceStrings.Text_Edit_View, new { @class = "edit-button", @type = "button", @id = "imgBtEdit" }, AuthorizeUser.CanPerformAction(PageId.PAGE_BUSINESSENTITYACCESSBYUSER, DataOperation.READ) || AuthorizeUser.CanPerformAction(PageId.PAGE_BUSINESSENTITYACCESSBYUSER, DataOperation.UPDATE))
+            @Html.Button(ResourceStrings.Text_Copy, new { @class = "copy-button", @type = "button", @id = "imgBtCopy" }, AuthorizeUser.CanPerformAction(PageId.PAGE_BUSINESSENTITYACCESSBYUSER, DataOperation.CREATE))
+            @Html.Button(ResourceStrings.Text_Delete, new { @class = "delete-button", @type = "button", @id = "imgBtDelete" }, AuthorizeUser.CanPerformAction(PageId.PAGE_BUSINESSENTITYACCESSBYUSER, DataOperation.DELETE))
+        </div>
+
+        @(Html.Search("BusinessEntityAccessByUserSearch").Form("BusinessEntityAccessByUserForm").Grid("gridBusinessEntityAccessByUser"))
+        <div id="gridBusinessEntityAccessByUser"></div>
+    </div>
+
+    @Html.Hidden("hidGridCheckedRowsBusinessEntityAccessByUser")
+}
+
+@if (AuthorizeUser.CanPerformAction(PageId.PAGE_BUSINESSENTITYACCESSBYUSER, DataOperation.CREATE) || AuthorizeUser.CanPerformAction(PageId.PAGE_BUSINESSENTITYACCESSBYUSER, DataOperation.UPDATE))
+{
+    @(Html.SearchBox("imgBtUserName")
+        .MultiSelect(false)
+        .Title(ResourceStrings.Text_Users)
+        .Sort("UserName")
+        .Controller("BusinessEntityAccessByUser")
+        .Action("UserAccountDetailsPage")
+        .BindData("bindUserAccount")
+        .Columns(string.Format("Id:{0}:number:true:0,UserName:{1}:string:false:48,FullName:{2}:string:false:48",
+            ResourceStrings.Display_Name_UserAccountDetails_Id, ResourceStrings.Display_Name_UserAccountDetails_UserName, ResourceStrings.Display_Name_UserAccountDetails_FullName)))
+}
+
+<script>
+    function bindUserAccount(returnValues) {
+        if (returnValues !== "") {
+            $.ajax({
+                url: "BusinessEntityAccessByUser/GetUserAccountData",
+                data: { id: returnValues },
+                traditional: true,
+                type: "POST",
+                async: false,
+                success: function (data) {
+                    $("#window #error-display, #error-display").html("");
+
+                    $("#txBxUserName").val(data.UserName);
+                    $("#txBxFullName").val(data.FullName);
+
+                    $("#hidLnUserAccountId").val(returnValues);
+
+                    $("#txBxValue").valid();
+                }
+            });
+        }
+    }
+</script>
+
+<div id="window"></div>
+@Scripts.Render("~/bundles/popup", "~/bundles/grid")

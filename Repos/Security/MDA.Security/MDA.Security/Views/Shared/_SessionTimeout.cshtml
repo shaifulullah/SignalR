@@ -1,0 +1,22 @@
+﻿@{
+    ViewBag.Title = ResourceStrings.Text_Session_Timeout;
+}
+
+<script>
+    setTimeout('SessionEnd()', 5000);
+
+    function SessionEnd() {
+        window.location.href = '@Url.Action("Index", "Home")';
+    }
+</script>
+
+<div class="content">
+    <fieldset class="form-layout">
+        <legend></legend>
+
+        <p><b>@ResourceStrings.Message_Session_Timeout_Line_1</b></p>
+        <p>@ResourceStrings.Message_Session_Timeout_Line_2</p>
+        <br />
+        <p>@Html.ActionLink(ResourceStrings.Message_If_Not_Redirected, "Index", "Home")</p>
+    </fieldset>
+</div>

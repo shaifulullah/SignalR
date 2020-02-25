@@ -1,0 +1,60 @@
+﻿@model UserApplicationSettingsViewModel
+
+@using (Html.BeginForm(string.Empty, "UserAcccount", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    <div class="content">
+        <div id="error-display" class="popup-error">
+            @ViewBag.ErrorMessage
+        </div>
+
+        <div class="padding-bottom-5">
+            @Html.Button(ResourceStrings.Text_Save, new { @class = "save-button", @type = "button", @id = "imgBtSaveUserApplicationSettings" },
+                AuthorizeUser.CanPerformAction(PageId.PAGE_USERAPPLICATIONSETTINGS, DataOperation.UPDATE))
+        </div>
+
+        <fieldset class="form-layout">
+            <legend></legend>
+
+            @Html.Hidden("title", string.Format("{0} [{1}]", ApplicationGlobals.GetActionText(Model.DataAction), ResourceStrings.Text_UserApplicationSettings))
+            @Html.HiddenFor(model => model.DataAction)
+
+            @Html.HiddenFor(model => model.LnUserAccountId, new { id = "hidId" })
+
+            <table class="form-table">
+                <tr>
+                    <td class="form-label">@Html.LabelFor(model => model.Language)<b class="form-required">&#42;</b></td>
+                    <td>@Html.DropDownListFor(model => model.Language, Model.LanguageList, string.Format(ResourceStrings.Text_Select, ResourceStrings.Text_Language), new { @style = "width:305px" })</td>
+                    <td class="form-error">@Html.ValidationMessageFor(model => model.Language)</td>
+                </tr>
+                <tr>
+                    <td class="form-label">@Html.LabelFor(model => model.LnCompanyId)<b class="form-required">&#42;</b></td>
+                    <td>@Html.DropDownListFor(model => model.LnCompanyId, Model.CompanyList, string.Format(ResourceStrings.Text_Select, ResourceStrings.Text_Company), new { @style = "width:305px" })</td>
+                    <td class="form-error">@Html.ValidationMessageFor(model => model.LnCompanyId)</td>
+                </tr>
+                <tr>
+                    <td class="form-label">@Html.LabelFor(model => model.UserMenuLocation)<b class="form-required">&#42;</b></td>
+                    <td>@Html.DropDownListFor(model => model.UserMenuLocation, Model.UserMenuLocationList, string.Format(ResourceStrings.Text_Select, ResourceStrings.Text_User_Menu_Location), new { @style = "width:305px" })</td>
+                    <td class="form-error">@Html.ValidationMessageFor(model => model.UserMenuLocation)</td>
+                </tr>
+                <tr>
+                    <td class="form-label">@Html.LabelFor(model => model.Project)<b class="form-required">&#42;</b></td>
+                    <td>
+                        <span class="search-box">
+                            <nobr>
+                                @Html.TextBoxFor(model => model.Project, new { @id = "txBxProject", @readonly = "readonly" })
+                                <input type="button" id="imgBtProject" />
+                            </nobr>
+                        </span>
+                    </td>
+                    <td class="form-error">@Html.ValidationMessageFor(model => model.Project)</td>
+                </tr>
+            </table>
+        </fieldset>
+
+        @if (Model.DataAction == DataOperation.EDIT_VIEW)
+        {
+            @Html.HiddenFor(model => model.Id, new { Value = Model.Id })
+        }
+    </div>
+}

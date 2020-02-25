@@ -1,0 +1,129 @@
+﻿@{
+    ViewBag.Title = string.Format(ResourceStrings.Text_Identification, ResourceStrings.Text_BusinessEntityRestrictionByRole);
+}
+
+<script>
+    $(function () {
+        $("#gridBusinessEntityRestrictionByRole").kendoGrid({
+            columns: [
+                {
+                    headerTemplate: "<input id='chBxSelectAll' type='checkbox' />",
+                    template: "<input id='chBxSelectRow' class='gridCheckBox' type='checkbox' />",
+                    filterable: false, sortable: false, groupable: false, width: 28
+                },
+                { field: "Id", title: "@ResourceStrings.Display_Name_BusinessEntityRestrictionByRole_Id", hidden: true },
+                { field: "SecurityRolesObj.Code", title: "@ResourceStrings.Display_Name_BusinessEntityRestrictionByRole_SecurityRolesCode" },
+                { field: "SecurityRolesObj.Description", title: "@ResourceStrings.Display_Name_BusinessEntityRestrictionByRole_SecurityRolesDescription" },
+                { field: "SecurityRolesObj.CompanyInApplicationObj.ApplicationObj.Description", title: "@ResourceStrings.Display_Name_BusinessEntityRestrictionByRole_Application" },
+                { field: "SecurityRolesObj.CompanyInApplicationObj.CompanyObj.Description", title: "@ResourceStrings.Display_Name_BusinessEntityRestrictionByRole_Company" },
+                { field: "Value", title: "@ResourceStrings.Display_Name_BusinessEntityRestrictionByRole_Value" }
+            ],
+            pageable: { input: false, numeric: true, refresh: true, pageSizes: [15, 20, 30, 40, 50] },
+            groupable: true,
+            sortable: { allowUnsort: false },
+            filterable: true,
+            resizable: true,
+            dataBound: onDataBound,
+            dataSource: {
+                serverPaging: true, serverFiltering: true, serverSorting: true, pageSize: '@ApplicationGlobals.GridMinRows',
+                page: getPage("gridBusinessEntityRestrictionByRole"),
+                sort: getSort("gridBusinessEntityRestrictionByRole") == null ? { field: "SecurityRolesObj.Code", dir: "asc" } : getSort("gridBusinessEntityRestrictionByRole"),
+                filter: getFilter("gridBusinessEntityRestrictionByRole"),
+                schema: {
+                    data: "Data", total: "Total",
+                    model: {
+                        id: "Id",
+                        fields: {
+                            "Id": { type: "number" },
+                            "SecurityRolesObj.Code": { type: "string" },
+                            "SecurityRolesObj.Description": { type: "string" },
+                            "SecurityRolesObj.CompanyInApplicationObj.ApplicationObj.Description": { type: "string" },
+                            "SecurityRolesObj.CompanyInApplicationObj.CompanyObj.Description": { type: "string" },
+                            "Value": { type: "string" }
+                        }
+                    }
+                },
+                transport: {
+                    read: {
+                        url: "BusinessEntityRestrictionByRole/BusinessEntityRestrictionByRolePage",
+                        contentType: "application/json; charset=utf-8",
+                        type: "POST",
+                        dataType: "json"
+                    },
+                    parameterMap: function (data) {
+                        return JSON.stringify(data);
+                    }
+                }
+            }
+        });
+
+        $("#gridBusinessEntityRestrictionByRole").attr("hiddenSelectedRows", "#hidGridCheckedRowsBusinessEntityRestrictionByRole");
+    });
+</script>
+
+@using (Html.BeginForm(string.Empty, "BusinessEntityRestrictionByRole", FormMethod.Post))
+{
+    <div class="content">
+        <div id="error-display" class="error">
+            @ViewBag.ErrorMessage
+        </div>
+
+        @Html.GenerateBreadCrumbs("SecurityBusinessEntities", ResourceStrings.Text_BusinessEntityRestrictionByRole)
+        @Html.GenerateMasterDetail("SecurityBusinessEntities")
+
+        <div class="padding-bottom-5">
+            @Html.Button(ResourceStrings.Text_New, new { @class = "insert-button", @type = "button", @id = "imgBtNew" }, AuthorizeUser.CanPerformAction(PageId.PAGE_BUSINESSENTITYRESTRICTIONBYROLE, DataOperation.CREATE))
+            @Html.Button(ResourceStrings.Text_Edit_View, new { @class = "edit-button", @type = "button", @id = "imgBtEdit" }, AuthorizeUser.CanPerformAction(PageId.PAGE_BUSINESSENTITYRESTRICTIONBYROLE, DataOperation.READ) || AuthorizeUser.CanPerformAction(PageId.PAGE_BUSINESSENTITYRESTRICTIONBYROLE, DataOperation.UPDATE))
+            @Html.Button(ResourceStrings.Text_Copy, new { @class = "copy-button", @type = "button", @id = "imgBtCopy" }, AuthorizeUser.CanPerformAction(PageId.PAGE_BUSINESSENTITYRESTRICTIONBYROLE, DataOperation.CREATE))
+            @Html.Button(ResourceStrings.Text_Delete, new { @class = "delete-button", @type = "button", @id = "imgBtDelete" }, AuthorizeUser.CanPerformAction(PageId.PAGE_BUSINESSENTITYRESTRICTIONBYROLE, DataOperation.DELETE))
+        </div>
+
+        @(Html.Search("BusinessEntityRestrictionByRoleSearch").Form("BusinessEntityRestrictionByRoleForm").Grid("gridBusinessEntityRestrictionByRole"))
+        <div id="gridBusinessEntityRestrictionByRole"></div>
+    </div>
+
+    @Html.Hidden("hidGridCheckedRowsBusinessEntityRestrictionByRole")
+}
+
+@if (AuthorizeUser.CanPerformAction(PageId.PAGE_BUSINESSENTITYRESTRICTIONBYROLE, DataOperation.CREATE) || AuthorizeUser.CanPerformAction(PageId.PAGE_BUSINESSENTITYRESTRICTIONBYROLE, DataOperation.UPDATE))
+{
+    @(Html.SearchBox("imgBtSecurityRolesCode")
+        .MultiSelect(false)
+        .Title(ResourceStrings.Text_SecurityRoles)
+        .Sort("Code")
+        .Controller("BusinessEntityRestrictionByRole")
+        .Action("SecurityRolesPage")
+        .BindData("bindSecurityRoles")
+        .Columns(string.Format("Id:{0}:number:true:0,Code:{1}:string:false:20,Description:{2}:string:false:30,CompanyInApplicationObj.ApplicationObj.Description:{3}:string:false:23,CompanyInApplicationObj.CompanyObj.Description:{4}:string:false:23",
+            ResourceStrings.Display_Name_SecurityRoles_Id, ResourceStrings.Display_Name_SecurityRoles_Code, ResourceStrings.Display_Name_SecurityRoles_Description,
+            ResourceStrings.Display_Name_BusinessEntityRestrictionByRole_Application, ResourceStrings.Display_Name_BusinessEntityRestrictionByRole_Company)))
+}
+
+<script>
+    function bindSecurityRoles(returnValues) {
+        if (returnValues !== "") {
+            $.ajax({
+                url: "BusinessEntityRestrictionByRole/GetSecurityRolesData",
+                data: { id: returnValues },
+                traditional: true,
+                type: "POST",
+                async: false,
+                success: function (data) {
+                    $("#window #error-display, #error-display").html("");
+
+                    $("#txBxSecurityRolesCode").val(data.SecurityRolesCode);
+                    $("#txBxSecurityRolesDescription").val(data.SecurityRolesDescription);
+                    $("#txBxApplication").val(data.Application);
+                    $("#txBxCompany").val(data.Company);
+
+                    $("#hidLnSecurityRolesId").val(returnValues);
+
+                    $("#txBxValue").valid();
+                }
+            });
+        }
+    }
+</script>
+
+<div id="window"></div>
+@Scripts.Render("~/bundles/popup", "~/bundles/grid")

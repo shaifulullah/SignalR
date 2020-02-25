@@ -1,0 +1,152 @@
+﻿@{
+    ViewBag.Title = string.Format(ResourceStrings.Text_Identification, ResourceStrings.Text_UserDelegate);
+}
+
+<script>
+    $(function () {
+        $("#gridUserDelegate").kendoGrid({
+            columns: [
+                {
+                    headerTemplate: "<input id='chBxSelectAll' type='checkbox' />",
+                    template: "<input id='chBxSelectRow' class='gridCheckBox' type='checkbox' />",
+                    filterable: false, sortable: false, groupable: false, width: 28
+                },
+                { field: "DelegateUserAccountObj.UserName", title: "@ResourceStrings.Display_Name_UserDelegate_DelegateUserName" },
+                { field: "SecurityRolesObj.Description", title: "@ResourceStrings.Display_Name_UserDelegate_SecurityRoles" },
+                { field: "SecurityRolesObj.CompanyInApplicationObj.ApplicationObj.Description", title: "@ResourceStrings.Display_Name_UserDelegate_Application" },
+                { field: "SecurityRolesObj.CompanyInApplicationObj.CompanyObj.Description", title: "@ResourceStrings.Display_Name_UserDelegate_Company" },
+                { field: "DateTimeStart", title: "@ResourceStrings.Display_Name_UserDelegate_DateTimeStart", format: "{0:@ApplicationGlobals.ShortDatePattern}" },
+                { field: "DateTimeEnd", title: "@ResourceStrings.Display_Name_UserDelegate_DateTimeEnd", format: "{0:@ApplicationGlobals.ShortDatePattern}" },
+                { field: "FlagIsApprover", title: "@ResourceStrings.Display_Name_UserDelegate_FlagIsApprover", template: '<input disabled="disabled" type="checkbox" #=FlagIsApprover?"checked=checked":""# />' },
+                { field: "Id", title: "@ResourceStrings.Display_Name_UserDelegate_Id", hidden: true }
+            ],
+            pageable: { input: false, numeric: true, refresh: true, pageSizes: [15, 20, 30, 40, 50] },
+            groupable: true,
+            sortable: { allowUnsort: false },
+            filterable: true,
+            resizable: true,
+            dataBound: onDataBound,
+            dataSource: {
+                serverPaging: true, serverFiltering: true, serverSorting: true, pageSize: '@ApplicationGlobals.GridMinRows',
+                page: getPage("gridUserDelegate"),
+                sort: getSort("gridUserDelegate") == null ? { field: "DelegateUserAccountObj.UserName", dir: "asc" } : getSort("gridUserDelegate"),
+                filter: getFilter("gridUserDelegate"),
+                schema: {
+                    data: "Data", total: "Total",
+                    model: {
+                        id: "Id",
+                        fields: {
+                            "DelegateUserAccountObj.UserName": { type: "string" },
+                            "SecurityRolesObj.Description": { type: "string" },
+                            "SecurityRolesObj.CompanyInApplicationObj.ApplicationObj.Description": { type: "string" },
+                            "SecurityRolesObj.CompanyInApplicationObj.CompanyObj.Description": { type: "string" },
+                            "DateTimeEnd": { type: "date" },
+                            "DateTimeStart": { type: "date" },
+                            "FlagIsApprover": { type: "boolean" },
+                            "Id": { type: "number" }
+                        }
+                    }
+                },
+                transport: {
+                    read: {
+                        url: "UserDelegate/UserDelegatePage",
+                        contentType: "application/json; charset=utf-8",
+                        type: "POST",
+                        dataType: "json"
+                    },
+                    parameterMap: function (data) {
+                        return JSON.stringify(data);
+                    }
+                }
+            }
+        });
+
+        $("#gridUserDelegate").attr("hiddenSelectedRows", "#hidGridCheckedRowsUserDelegate");
+    });
+</script>
+
+@using (Html.BeginForm(string.Empty, "UserDelegate", FormMethod.Post))
+{
+    <div class="content">
+        <div id="error-display" class="error">
+            @ViewBag.ErrorMessage
+        </div>
+
+        @Html.GenerateBreadCrumbs("UserAccount", ResourceStrings.Text_UserDelegate)
+        @Html.GenerateMasterDetail("UserAccount")
+
+        <div class="padding-bottom-5">
+            @Html.Button(ResourceStrings.Text_New, new { @class = "insert-button", @type = "button", @id = "imgBtNew" }, AuthorizeUser.CanPerformAction(PageId.PAGE_USERDELEGATE, DataOperation.CREATE))
+            @Html.Button(ResourceStrings.Text_Edit_View, new { @class = "edit-button", @type = "button", @id = "imgBtEdit" }, AuthorizeUser.CanPerformAction(PageId.PAGE_USERDELEGATE, DataOperation.READ) || AuthorizeUser.CanPerformAction(PageId.PAGE_USERDELEGATE, DataOperation.UPDATE))
+            @Html.Button(ResourceStrings.Text_Delete, new { @class = "delete-button", @type = "button", @id = "imgBtDelete" }, AuthorizeUser.CanPerformAction(PageId.PAGE_USERDELEGATE, DataOperation.DELETE))
+        </div>
+
+        @(Html.Search("UserDelegateSearch").Form("UserDelegateForm").Grid("gridUserDelegate"))
+        <div id="gridUserDelegate"></div>
+    </div>
+
+    @Html.Hidden("hidGridCheckedRowsUserDelegate")
+}
+
+@if (AuthorizeUser.CanPerformAction(PageId.PAGE_USERDELEGATE, DataOperation.CREATE))
+{
+    @(Html.SearchBox("imgBtSecurityRoles")
+        .MultiSelect(false)
+        .Title(ResourceStrings.Text_SecurityRoles)
+        .Sort("Code")
+        .Controller("UserDelegate")
+        .Action("AvailableSecurityRolesPageForUserAccount")
+        .BindData("bindSecurityRoles")
+        .Columns(string.Format("Id:{0}:number:true:0,Code:{1}:string:false:26,Description:{2}:string:false:30,CompanyInApplicationObj.ApplicationObj.Description:{3}:string:false:20,CompanyInApplicationObj.CompanyObj.Description:{4}:string:false:20",
+            ResourceStrings.Display_Name_SecurityRoles_Id, ResourceStrings.Display_Name_SecurityRoles_Code, ResourceStrings.Display_Name_SecurityRoles_Description,
+            ResourceStrings.Display_Name_SecurityRoles_Application, ResourceStrings.Display_Name_SecurityRoles_Company)))
+
+    @(Html.SearchBox("imgBtDelegateUserName")
+        .MultiSelect(false)
+        .Title(ResourceStrings.Text_Delegate)
+        .Sort("UserName")
+        .Controller("UserDelegate")
+        .Action("AvailableDelegatePageForSecurityRole")
+        .BindData("bindDelegate")
+        .Columns(string.Format("Id:{0}:number:true:0,UserName:{1}:string:false:36,FullName:{2}:string:false:30,Company:{3}:string:false:30",
+            ResourceStrings.Display_Name_UserAccountDetails_Id, ResourceStrings.Display_Name_UserAccountDetails_UserName,
+            ResourceStrings.Display_Name_UserAccountDetails_FullName, ResourceStrings.Display_Name_UserAccountDetails_Company)))
+}
+
+<script>
+    function bindSecurityRoles(returnValues) {
+        if (returnValues != "") {
+            $.ajax({
+                url: "UserDelegate/GetSecurityRolesDescription",
+                data: { id: returnValues },
+                type: "POST",
+                async: false,
+                success: function (data) {
+                    $("#hidLnSecurityRolesId").val(returnValues);
+                    $.cookie("TEMPIDNUMBER", returnValues);
+
+                    $("#txBxSecurityRoles").val(data);
+                    $("#txBxDelegateUserName").val("");
+                }
+            });
+        }
+    };
+
+    function bindDelegate(returnValues) {
+        if (returnValues != "") {
+            $.ajax({
+                url: "UserDelegate/GetDelegateUserName",
+                data: { id: returnValues },
+                type: "POST",
+                async: false,
+                success: function (data) {
+                    $("#hidLnDelegateUserAccountId").val(returnValues);
+                    $("#txBxDelegateUserName").val(data);
+                }
+            });
+        }
+    };
+</script>
+
+<div id="window"></div>
+@Scripts.Render("~/bundles/popup", "~/bundles/grid")

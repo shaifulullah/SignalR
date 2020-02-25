@@ -1,0 +1,62 @@
+﻿@model BusinessEntityRestrictionByUserViewModel
+
+@using (Html.BeginForm(string.Empty, "BusinessEntityRestrictionByUser", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    <div class="content">
+        <div id="error-display" class="popup-error">
+            @ViewBag.ErrorMessage
+        </div>
+
+        <div class="padding-bottom-5">
+            @Html.Button(ResourceStrings.Text_Save, new { @class = "save-button", @type = "button", @id = "imgBtSave" },
+                Model.DataAction != DataOperation.EDIT_VIEW || AuthorizeUser.CanPerformAction(PageId.PAGE_BUSINESSENTITYRESTRICTIONBYUSER, DataOperation.UPDATE))
+        </div>
+
+        <fieldset class="form-layout">
+            <legend></legend>
+
+            @Html.Hidden("title", string.Format("{0} [{1}]", ApplicationGlobals.GetActionText(Model.DataAction), ResourceStrings.Text_BusinessEntityRestrictionByUser))
+
+            @Html.HiddenFor(model => model.DataAction)
+            @Html.HiddenFor(model => model.LnUserAccountId, new { @id = "hidLnUserAccountId" })
+            @Html.HiddenFor(model => model.LnSecurityBusinessEntitiesId)
+
+            <table class="form-table">
+                <tr>
+                    <td class="form-label">@Html.LabelFor(model => model.UserName)<b class="form-required">&#42;</b></td>
+                    <td>
+                        <span class="search-box">
+                            <nobr>
+                                @Html.TextBoxFor(model => model.UserName, new { @id = "txBxUserName", @readonly = "readonly" })
+                                <input type="button" id="imgBtUserName" />
+                            </nobr>
+                        </span>
+                    </td>
+                    <td class="form-error">@Html.ValidationMessageFor(model => model.UserName)</td>
+                </tr>
+                <tr>
+                    <td class="form-label">@Html.LabelFor(model => model.FullName)</td>
+                    <td>@Html.TextBoxFor(model => model.FullName, new { @id = "txBxFullName", @readonly = "readonly" })</td>
+                    <td class="form-error">@Html.ValidationMessageFor(model => model.FullName)</td>
+                </tr>
+                <tr>
+                    <td class="form-label">@Html.LabelFor(model => model.Value)<b class="form-required">&#42;</b></td>
+                    <td>@Html.TextBoxFor(model => model.Value, new { @id = "txBxValue" })</td>
+                    <td class="form-error">@Html.ValidationMessageFor(model => model.Value)</td>
+                </tr>
+            </table>
+        </fieldset>
+
+        @if (Model.DataAction == DataOperation.EDIT_VIEW)
+        {
+            @Html.HiddenFor(model => model.Id, new { id = "hidId" })
+
+            <div class="padding-top-5" style="float: right">
+                @Html.Button(ResourceStrings.Text_Previous, new { @class = "previous-button", @type = "button", id = "imgBtPrevious" })
+                @Html.Label(ResourceStrings.Text_First_Record, new { id = "lblCurrentRecord" })
+                @Html.Button(ResourceStrings.Text_Next, new { @class = "next-button", @type = "button", id = "imgBtNext" })
+            </div>
+        }
+    </div>
+}

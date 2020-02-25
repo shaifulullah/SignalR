@@ -1,0 +1,125 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{84CAF360-ECD3-43A0-B573-DBCEA42F0D13}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>MDA.Security.Models</RootNamespace>
+    <AssemblyName>MDA.Security.Models</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Linq.Translations, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Linq.Translations.1.0.1\lib\net40\Microsoft.Linq.Translations.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Application.cs" />
+    <Compile Include="ApplicationComponent.cs" />
+    <Compile Include="ApplicationDBContext.cs" />
+    <Compile Include="ApplicationSettings.cs" />
+    <Compile Include="AppUsageLog.cs" />
+    <Compile Include="Audit.cs" />
+    <Compile Include="BusinessEntityAccessByAD.cs" />
+    <Compile Include="BusinessEntityAccessByRole.cs" />
+    <Compile Include="BusinessEntityAccessByUser.cs" />
+    <Compile Include="BusinessEntityAccessByUserAccounts.cs" />
+    <Compile Include="BusinessEntityRestrictionByAD.cs" />
+    <Compile Include="BusinessEntityRestrictionByRole.cs" />
+    <Compile Include="BusinessEntityRestrictionByUser.cs" />
+    <Compile Include="BusinessEntityRestrictionByUserAccounts.cs" />
+    <Compile Include="Company.cs" />
+    <Compile Include="CompanyInApplication.cs" />
+    <Compile Include="ExternalCompany.cs" />
+    <Compile Include="ExternalPerson.cs" />
+    <Compile Include="LogAction.cs" />
+    <Compile Include="MasterUser.cs" />
+    <Compile Include="Projects.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RO_Department.cs" />
+    <Compile Include="RO_Employee.cs" />
+    <Compile Include="RO_EmployeeAddInfo.cs" />
+    <Compile Include="RO_EmployeeDetails.cs" />
+    <Compile Include="RO_Skills.cs" />
+    <Compile Include="SecurityApplicationSettings.cs" />
+    <Compile Include="SecurityBusinessEntities.cs" />
+    <Compile Include="SecurityItem.cs" />
+    <Compile Include="SecurityLevel.cs" />
+    <Compile Include="SecurityRolesDetails.cs" />
+    <Compile Include="SecurityRolesDetailsWithUserName.cs" />
+    <Compile Include="ServiceDetails.cs" />
+    <Compile Include="UserApplicationSettings.cs" />
+    <Compile Include="UserAttributes.cs" />
+    <Compile Include="UserInCompanyInApplicationDetails.cs" />
+    <Compile Include="UserSecurityRights.cs" />
+    <Compile Include="SecurityRoleRights.cs" />
+    <Compile Include="SecurityRoles.cs" />
+    <Compile Include="SecurityType.cs" />
+    <Compile Include="SecurityUserInRoles.cs" />
+    <Compile Include="SecurityUserRights.cs" />
+    <Compile Include="TreeMenu.cs" />
+    <Compile Include="UserAccount.cs" />
+    <Compile Include="UserAccountDetails.cs" />
+    <Compile Include="UserApplicationFavourites.cs" />
+    <Compile Include="UserDelegate.cs" />
+    <Compile Include="UserInCompanyInApplication.cs" />
+    <Compile Include="UserLog.cs" />
+    <Compile Include="UserPreferences.cs" />
+    <Compile Include="SecurityRightsForSecurityRole.cs" />
+    <Compile Include="SecurityRightsForUserAccount.cs" />
+    <Compile Include="UserSettings.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

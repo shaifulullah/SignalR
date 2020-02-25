@@ -1,0 +1,282 @@
+﻿@model Chnage.Models.ECO
+
+@{
+    Layout = "_PrintLayout";
+    ViewData["Title"] = "ECO Print";
+}
+
+<div class="row text-center">
+    <h2>
+        Details for Engineering Change Order
+    </h2>
+    <hr />
+</div>
+
+<div>
+    <div class="row">
+        <div class="col-md-2">
+            <div class="form-group">
+                <label asp-for="Id" class="control-label"></label>
+                <div class="form-control">
+                    @Html.DisplayFor(m => m.Id)
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="form-group">
+                <label asp-for="ChangeType" class="control-label"></label>
+                <div class="form-control">
+                    @Html.DisplayFor(m => m.ChangeType.Name)
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="form-group">
+                <label asp-for="PriorityLevel" class="control-label"></label>
+                <div class="form-control">
+                    @Html.DisplayFor(m => m.PriorityLevel)
+                </div>
+                <span asp-validation-for="PriorityLevel" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-group">
+                <label asp-for="ImplementationType" class="control-label"></label>
+                <div class="form-control">
+                    @Html.DisplayFor(m => m.ImplementationType)
+                </div>
+                <span asp-validation-for="ImplementationType" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-group">
+                <label asp-for="PlannedImplementationDate" class="control-label"></label>
+                <div class="form-control">
+                    @Html.DisplayFor(m => m.PlannedImplementationDate)
+                </div>
+                <span asp-validation-for="PlannedImplementationDate" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        @if (Model.PermanentChange)
+        {
+            <div class="col-md-3">
+                <div class="form-group">
+                    <div class="form-control">
+                        <label>
+                            @Html.DisplayNameFor(model => model.PermanentChange)
+                        </label>
+                        <input asp-for="PermanentChange" disabled />
+                    </div>
+                </div>
+            </div>
+        }
+        @if (Model.BOMRequired)
+        {
+            <div class="col-md-3">
+                <div class="form-group">
+                    <div class="form-control">
+                        <label>
+                            @Html.DisplayNameFor(model => model.BOMRequired)
+                        </label>
+                    </div>
+                </div>
+            </div>
+        }
+        @if (Model.ProductValidationTestingRequired)
+        {
+            <div class="col-md-6">
+                <div class="form-group">
+                    <div class="form-control">
+                        <label class="control-label">
+                            @Html.DisplayNameFor(model => model.ProductValidationTestingRequired)
+                        </label>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label asp-for="Description" class="control-label"></label>
+                <textarea rows="8" asp-for="Description" class="form-control" disabled></textarea>
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label asp-for="ReasonForChange" class="control-label"></label>
+                <textarea rows="8" asp-for="ReasonForChange" class="form-control" disabled></textarea>
+                <span asp-validation-for="ReasonForChange" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="form-group">
+                <label asp-for="PreviousRevision"></label>
+                <div class="form-control">
+                    @Html.DisplayFor(i => i.PreviousRevision)
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                <label asp-for="NewRevision"></label>
+                <div class="form-control">
+                    @Html.DisplayFor(i => i.NewRevision)
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                <label class="control-label">
+                    Originator
+                </label>
+                <div class="form-control">
+                    @Html.DisplayFor(m => Model.Originator.Name)
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="form-group">
+                <label asp-for="CreatedDate" class="control-label"></label>
+                <div class="form-control">
+                    @Html.DisplayFor(m => Model.CreatedDate)
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                <label class="control-label" asp-for="ClosedDate"></label>
+                <div class="form-control">
+                    @Html.DisplayFor(m => m.ClosedDate)
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                <label class="control-label" asp-for="Status"></label>
+                <div class="form-control">
+                    @Html.DisplayFor(m => m.Status)
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @{
+        if (Model.RelatedECRs.Count > 0)
+        {
+            <div id="relatedecrs">
+                <h2>
+                    Related ECRs
+                </h2>
+                <div class="table-responsive">
+                    <partial name="PartialPrintRelatedECRs" model="ViewBag.ECRs">
+                </div>
+            </div>
+        }
+    }
+    @{
+        if (Model.LinkUrls != null)
+        {
+            if (Model.LinkUrls.Count > 0)
+            {
+                <div id="links">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h2>
+                                Documentation Links:
+                            </h2>
+                            <ul class="list-group list-inline">
+                                @{
+                                    if (Model.LinkUrls != null)
+                                    {
+                                        foreach (var link in Model.LinkUrls)
+                                        {
+                                            <li>
+                                                <label class="control-label">
+                                                    @link.Key
+                                                </label>
+                                                <a href="@link.Value" target="_blank" class="form-control">
+                                                    @link.Value
+                                                </a>
+                                            </li>
+                                        }
+                                    }
+                                }
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    }
+
+    @{
+
+        if (Model.AffectedProducts.Count > 0)
+        {
+            <p style="page-break-before: always">
+                <div id="products">
+                    <h2>
+                        Products
+                    </h2>
+                    <partial name="PartialAffectedProductsECO" model="Model.AffectedProducts" />
+                </div>
+            </p>
+        }
+
+    }
+    @{
+
+        var show = true;
+        if (Model.NotesForApprover.Count > 0)
+        {
+            foreach (var kvp in Model.NotesForApprover)
+            {
+                if (string.IsNullOrEmpty(kvp.Value))
+                {
+                    show = false;
+                }
+            }
+        }
+        if (show)
+        {
+            <p style="page-break-before: always">
+                <div id="notes">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h3>
+                                Notes For Each Department:
+                            </h3>
+                            <ul class="list-group">
+
+                                @{
+                                    if (Model.NotesForApprover != null)
+                                    {
+                                        foreach (var kvp in Model.NotesForApprover)
+                                        {
+                                            <li class="list-group-item">
+                                                <h4>
+                                                    @kvp.Key
+                                                </h4>
+                                                <div class="form-control">
+                                                    @Html.DisplayFor(m => kvp.Value)
+                                                </div>
+                                            </li>
+                                        }
+                                    }
+                                }
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </p>
+        }
+    }
+</div>

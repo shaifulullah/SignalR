@@ -1,0 +1,85 @@
+﻿@{
+    ViewBag.Title = string.Format(ResourceStrings.Text_Identification, ResourceStrings.Text_SecurityItem);
+}
+
+<script>
+    $(function () {
+        $("#gridSecurityItem").kendoGrid({
+            columns: [
+                {
+                    headerTemplate: "<input id='chBxSelectAll' type='checkbox' />",
+                    template: "<input id='chBxSelectRow' class='gridCheckBox' type='checkbox' />",
+                    filterable: false, sortable: false, groupable: false, width: 28
+                },
+                { field: "Code", title: "@ResourceStrings.Display_Name_SecurityItem_Code" },
+                { field: "Description", title: "@ResourceStrings.Display_Name_SecurityItem_Description" },
+                { field: "Id", title: "@ResourceStrings.Display_Name_SecurityItem_Id", hidden: true },
+                { field: "SecurityTypeObj.Description", title: "@ResourceStrings.Display_Name_SecurityItem_LnSecurityTypeId" },
+            ],
+            pageable: { input: false, numeric: true, refresh: true, pageSizes: [15, 20, 30, 40, 50] },
+            groupable: true,
+            sortable: { allowUnsort: false },
+            filterable: true,
+            resizable: true,
+            dataBound: onDataBound,
+            dataSource: {
+                serverPaging: true, serverFiltering: true, serverSorting: true, pageSize: '@ApplicationGlobals.GridMinRows',
+                page: getPage("gridSecurityItem"),
+                sort: getSort("gridSecurityItem") == null ? { field: "Code", dir: "asc" } : getSort("gridSecurityItem"),
+                filter: getFilter("gridSecurityItem"),
+                schema: {
+                    data: "Data", total: "Total",
+                    model: {
+                        id: "Id",
+                        fields: {
+                            "Code": { type: "string" },
+                            "Description": { type: "string" },
+                            "SecurityTypeObj.Description": { type: "string" },
+                            "Id": { type: "number" }
+                        }
+                    }
+                },
+                transport: {
+                    read: {
+                        url: "SecurityItem/SecurityItemPage",
+                        contentType: "application/json; charset=utf-8",
+                        type: "POST",
+                        dataType: "json"
+                    },
+                    parameterMap: function (data) {
+                        return JSON.stringify(data);
+                    }
+                }
+            }
+        });
+
+        $("#gridSecurityItem").attr("hiddenSelectedRows", "#hidGridCheckedRowsSecurityItem");
+    });
+</script>
+
+@using (Html.BeginForm(string.Empty, "SecurityItem", FormMethod.Post))
+{
+    <div class="content">
+        <div id="error-display" class="error">
+            @ViewBag.ErrorMessage
+        </div>
+
+        @Html.GenerateBreadCrumbs("Application,CompanyInApplication", ResourceStrings.Text_SecurityItem)
+        @Html.GenerateMasterDetail("Application,CompanyInApplication")
+
+        <div class="padding-bottom-5">
+            @Html.Button(ResourceStrings.Text_New, new { @class = "insert-button", @type = "button", @id = "imgBtNew" }, AuthorizeUser.CanPerformAction(PageId.PAGE_SECURITYITEM, DataOperation.CREATE))
+            @Html.Button(ResourceStrings.Text_Edit_View, new { @class = "edit-button", @type = "button", @id = "imgBtEdit" }, AuthorizeUser.CanPerformAction(PageId.PAGE_SECURITYITEM, DataOperation.READ) || AuthorizeUser.CanPerformAction(PageId.PAGE_SECURITYITEM, DataOperation.UPDATE))
+            @Html.Button(ResourceStrings.Text_Copy, new { @class = "copy-button", @type = "button", @id = "imgBtCopy" }, AuthorizeUser.CanPerformAction(PageId.PAGE_SECURITYITEM, DataOperation.CREATE))
+            @Html.Button(ResourceStrings.Text_Delete, new { @class = "delete-button", @type = "button", @id = "imgBtDelete" }, AuthorizeUser.CanPerformAction(PageId.PAGE_SECURITYITEM, DataOperation.DELETE))
+        </div>
+
+        @(Html.Search("SecurityItemSearch").Form("SecurityItemForm").Grid("gridSecurityItem"))
+        <div id="gridSecurityItem"></div>
+    </div>
+
+    @Html.Hidden("hidGridCheckedRowsSecurityItem")
+}
+
+<div id="window"></div>
+@Scripts.Render("~/bundles/popup", "~/bundles/grid")

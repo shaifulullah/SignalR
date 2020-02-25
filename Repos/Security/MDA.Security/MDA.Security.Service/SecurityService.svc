@@ -1,0 +1,1 @@
+﻿<%@ ServiceHost Language="C#" Debug="true" Service="MDA.Security.Service.SecurityService" CodeBehind="SecurityService.svc.cs" %>

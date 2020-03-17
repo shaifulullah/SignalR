@@ -120,6 +120,14 @@ namespace Chnage.ViewModel.ECO
         [Display(Name = "New Revision")]
         public string NewRevision { get; set; }
 
+        [Display(Name = "Deviation")]
+        public bool DeviationSelected { get; set; }
+        public string Deviation { get; set; }
+        [Display(Name = "Deviation Quantity"), Required]
+        public int? DeviationQuantity { get; set; }
+        [Display(Name = "Deviation Ends Date"), Required]
+        public DateTime? DeviationDate { get; set; }
+
     }
     public class RequestTypeChangeCheckBox
     {

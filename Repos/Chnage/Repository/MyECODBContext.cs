@@ -296,7 +296,7 @@ namespace Chnage.Repository
 
         private List<AuditEntryRepository> GetAuditEntries()
         {
-            var userName = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.Name).Value;
+            var userName = "Shaiful Ullah";//_httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.Name).Value;
             var auditEntries = new List<AuditEntryRepository>();
             foreach (var entry in ChangeTracker.Entries())
             {

@@ -4,7 +4,6 @@
     Layout = "_Layout";
     ViewData["Title"] = "Create ECO";
 }
-
 <div class="row text-center">
     <div class="col-md-12">
         <h2>Create Engineering Change Order</h2>
@@ -86,6 +85,31 @@
                 </div>
             </div>
             <div class="row">
+                <div class="col-md-12">
+                    <div class="col-md-4 form-group">
+                        <label class="btn btn-primary" style="margin-bottom:5px">
+                            @Html.CheckBoxFor(m => Model.DeviationSelected, new { value = Model.DeviationSelected, @class = "Deviation" })
+                            Deviation
+                        </label>
+                    </div>
+                    <div class="col-md-8" id="deviationDetails">
+                        <div class="col-md-4">
+                            <label asp-for="DeviationQuantity" class="control-label"></label>
+                            <input type="text" asp-for="DeviationQuantity" placeholder="Quantity (number only)" class="form-control numericOnly" />
+                            <span asp-validation-for="DeviationQuantity" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label asp-for="DeviationDate" class="control-label"></label>
+                                <input asp-for="DeviationDate" type="date" class="form-control" />
+                                <span asp-validation-for="DeviationDate" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="row">
                 <div class="col-md-6">
                     <div class="form-group">
                         <label asp-for="Description" class="control-label"></label>
@@ -116,7 +140,12 @@
                                 <input type="url" pattern="https://.*|http://.*" id="linkURL" class="form-control" placeholder="https://example.com" title="Enter a valid URl (https://)" />
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-1">
+                            <div class="form-group">
+                                <input type="button" onclick="AddLink()" class="btn btn-info" value="Add Link" />
+                            </div>
+                        </div>
+                        <div class="col-md-5">
                             <ul class="list-group list-inline" id="URLRepresentation"></ul> @*this is a list for all the links entered by the user in the input above ^ *@
                         </div>
                     </div>
@@ -132,7 +161,7 @@
                             @for (int i = 0; i < Model.AreasAffected.Count; i++)
                             {
                                 <li>
-                                    <label class="btn btn-primary">
+                                    <label class="btn btn-primary" style="margin-bottom:5px">
                                         @Html.CheckBoxFor(m => Model.AreasAffected[i].Selected, new { value = Model.AreasAffected[i].Selected, @class = "AreaCheckbox" })
                                         @Model.AreasAffected[i].Name
                                     </label>

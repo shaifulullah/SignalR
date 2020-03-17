@@ -1,0 +1,103 @@
+﻿@model Dictionary<string, Dictionary<string, Dictionary<Product, bool>>>
+
+<div class="row">
+    <div class="col-md-12">
+        <h3>
+            Categories:
+        </h3>
+        <ul class="list-inline">
+            @foreach (var category in Model)
+            {
+                <li>
+                    <label class="btn btn-primary" style="margin-bottom:5px;">
+                        <input type="checkbox" name="@category.Key" class="btnCategory" />
+                        @category.Key
+                    </label>
+                </li>
+            }
+        </ul>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <h3>Selected Products:</h3>
+        @foreach (var categories in Model)
+        {
+            <div class="hidden" name="@categories.Key">
+                <label>@categories.Key</label>
+                @if (categories.Key.Contains("Devices"))
+                {
+                    <ul class="list-inline">
+                        <li>
+                            <span>Select All:</span>
+                        </li>
+                        <li>
+                            <span class="btn btn-default selectDevices">
+                                GO7
+                            </span>
+                        </li>
+                        <li>
+                            <span class="btn btn-default selectDevices">
+                                GO8
+                            </span>
+                        </li>
+                        <li>
+                            <span class="btn btn-default selectDevices">
+                                GO9
+                            </span>
+                        </li>
+                        <li>
+                            <span class="btn btn-default selectDevices">
+                                GR7
+                            </span>
+                        </li>
+                        <li>
+                            <span class="btn btn-default selectDevices">
+                                GR8
+                            </span>
+                        </li>
+                    </ul>
+                }
+                <ul class="list-inline">
+                    @foreach (var family in categories.Value)
+                    {
+                        <li class="prodList" style="border: 1px solid rgba(9, 0, 90, 0.75);border-radius: 4px;padding: 6px 12px; margin:5px;">
+                            <label>
+                                @family.Key
+                            </label>
+                            <span class="btn glyphicon glyphicon-ok" title="Select All/None" onclick="$(this).children(':checkbox').click()"><input type="checkbox" class="hidden btnFamilyAll" /></span>
+                            <span>
+                                &nbsp;
+                            </span>
+                            <span class="btn glyphicon glyphicon glyphicon-retweet" onclick="$(this).children(':checkbox').click()" title="Reverse Selection"><input type="checkbox" class="hidden btnFamilyInvert" /></span>
+                            <div>
+                                <ul class="list-inline">
+                                    @foreach (var product in family.Value)
+                                    {
+                                        <li style="padding:5px;">
+                                            <label class="btn btn-default">
+                                                <input class="checkboxProduct" type="checkbox" value="@product.Key.Id" name="AffectedProductsIds" checked="@product.Value" />
+                                                <span>
+                                                    @product.Key.Name.Trim()
+                                                </span>
+                                            </label>
+                                        </li>
+                                    }
+                                </ul>
+                            </div>
+                        </li>
+                    }
+                </ul>
+            </div>
+        }
+    </div>
+</div>
+
+<script>
+    $(function () {
+        var HiddenDiv = $(".checkboxProduct:checked").parents(".hidden");
+        HiddenDiv.removeClass("hidden");
+        var CategoryCheckBox = $("input[name='" + HiddenDiv.attr("name") + "'");
+        CategoryCheckBox.attr("checked", true).change();
+    })
+</script>
